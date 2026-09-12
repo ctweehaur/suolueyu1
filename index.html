@@ -1,1140 +1,184 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>华文中概述必知缩略语500条 - 互动闪卡</title>
-  <style>
-    :root {
-      --bg-color: #f7f6f2;
-      --primary-teal: #00a878;
-      --orange-btn: #f9820d;
-      --card-bg: #ffffff;
-      --text-main: #2b2b2b;
-      --text-muted: #888888;
-      --border-color: #e5e2da;
-      --tag-bg: #ffffff;
-      --tag-border: #ece8df;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 15px 50px;
-      min-height: 100vh;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 580px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* 标题与顶部进度 */
-    h1 {
-      font-size: 26px;
-      font-weight: 700;
-      color: #264653;
-      margin-bottom: 14px;
-      letter-spacing: 1px;
-    }
-
-    .progress-bar-container {
-      width: 100%;
-      height: 7px;
-      background-color: #e0ded7;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background-color: var(--primary-teal);
-      transition: width 0.3s ease;
-    }
-
-    .stats-text {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-      letter-spacing: 0.5px;
-    }
-
-    /* 分类标签过滤栏 */
-    .filter-tags {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      width: 100%;
-    }
-
-    .tag-btn {
-      background: var(--tag-bg);
-      border: 1px solid var(--tag-border);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      cursor: pointer;
-      color: #444;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-      transition: all 0.2s ease;
-    }
-
-    .tag-btn.active {
-      background-color: #2b2b2b;
-      color: #ffffff;
-      border-color: #2b2b2b;
-    }
-
-    /* 模式切换栏（错题训练 / 开始小测验） */
-    .action-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    .btn-action {
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: transform 0.1s ease, box-shadow 0.2s ease;
-    }
-
-    .btn-mistakes {
-      background: #ffffff;
-      border: 1px solid #ebdcd6;
-      color: #b03a2e;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    }
-    .btn-mistakes.active {
-      background: #fde8e8;
-      border-color: #e07a5f;
-    }
-
-    .btn-quiz {
-      background: var(--orange-btn);
-      border: none;
-      color: #ffffff;
-      box-shadow: 0 3px 8px rgba(249, 130, 13, 0.25);
-    }
-
-    /* 闪卡容器与 3D 翻转 */
-    .flashcard-wrapper {
-      width: 100%;
-      height: 400px;
-      perspective: 1200px;
-      cursor: pointer;
-      margin-bottom: 20px;
-    }
-
-    .flashcard {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
-      border-radius: 24px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .flashcard.flipped {
-      transform: rotateY(180deg);
-    }
-
-    .card-face {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: 24px;
-      background: #ffffff;
-      padding: 30px 25px;
-      display: flex;
-      flex-direction: column;
-      box-sizing: border-box;
-      border: 1px solid #f0ede6;
-    }
-
-    /* 正面：原词展示 */
-    .card-front {
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .hint-tap {
-      position: absolute;
-      bottom: 20px;
-      font-size: 12px;
-      color: #aaa;
-      letter-spacing: 1px;
-    }
-
-    .front-pinyin {
-      font-size: 20px;
-      color: #777;
-      margin-bottom: 12px;
-      letter-spacing: 2px;
-    }
-
-    .front-word {
-      font-size: 40px;
-      font-weight: 500;
-      color: #2b2b2b;
-      letter-spacing: 3px;
-      max-width: 90%;
-      line-height: 1.3;
-    }
-
-    .card-index-tag {
-      position: absolute;
-      top: 20px;
-      left: 24px;
-      font-size: 12px;
-      color: #aaa;
-    }
-
-    /* 背面：缩略语与概述考查提示 */
-    .card-back {
-      transform: rotateY(180deg);
-      justify-content: space-between;
-      text-align: left;
-      background: #fffdf9;
-    }
-
-    .back-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      background: #fbf2e3;
-      color: #b45309;
-      font-size: 12px;
-      font-weight: 600;
-      border-radius: 6px;
-      margin-bottom: 12px;
-      width: fit-content;
-    }
-
-    .back-answer-box {
-      margin-bottom: 15px;
-    }
-
-    .back-answer-label {
-      font-size: 13px;
-      color: #777;
-      margin-bottom: 4px;
-    }
-
-    .back-answer {
-      font-size: 34px;
-      font-weight: 700;
-      color: var(--primary-teal);
-      letter-spacing: 2px;
-    }
-
-    .back-meta-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      border-top: 1px dashed #e8e3d9;
-      padding-top: 15px;
-      margin-bottom: 15px;
-    }
-
-    .meta-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #0284c7;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
-
-    .meta-desc {
-      font-size: 13px;
-      color: #555;
-      line-height: 1.4;
-    }
-
-    .back-example-box {
-      background: #f9f8f5;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 1px solid #ede8de;
-    }
-
-    .example-badge {
-      font-size: 11px;
-      color: #777;
-      background: #ede8de;
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-bottom: 6px;
-      display: inline-block;
-    }
-
-    .example-content {
-      font-size: 13.5px;
-      color: #333;
-      line-height: 1.5;
-    }
-
-    /* 底部按钮栏（待加强 / 已掌握） */
-    .btn-controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      width: 100%;
-      margin-bottom: 15px;
-    }
-
-    .btn-mark {
-      padding: 15px;
-      border-radius: 14px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.15s ease;
-    }
-
-    .btn-need-review {
-      background: #ffffff;
-      border: 1px solid #ebdcd6;
-      color: #e05646;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-    }
-    .btn-need-review:hover {
-      background: #fff5f5;
-    }
-
-    .btn-mastered {
-      background: #2b2b2b;
-      border: none;
-      color: #ffffff;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-    }
-    .btn-mastered:hover {
-      background: #111111;
-    }
-
-    .footer-progress {
-      font-size: 12px;
-      color: var(--text-muted);
-      letter-spacing: 1px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>缩略语学习卡</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- 外部样式 -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f6f5f2;
+            color: #4a4540; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        .word-title { 
+            font-family: 'Noto Serif SC', serif; 
+        }
+        .animate-bounce {
+            animation: toastBounce 0.5s ease;
+        }
+        @keyframes toastBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen p-4 flex flex-col items-center justify-start select-none">
 
-<div class="container">
-  <h1>概述缩略语500条</h1>
-  
-  <div class="progress-bar-container">
-    <div class="progress-bar" id="progressBar"></div>
-  </div>
-  <div class="stats-text" id="statsText">已掌握 0 / 500 词 (0%)</div>
-
-  <!-- 分类标签过滤器 -->
-  <div class="filter-tags" id="filterContainer">
-    <button class="tag-btn active" data-cat="all">全部</button>
-    <button class="tag-btn" data-cat="行政法律">🏛️ 行政法律</button>
-    <button class="tag-btn" data-cat="社会民生">👥 社会民生</button>
-    <button class="tag-btn" data-cat="经贸商业">💼 经贸商业</button>
-    <button class="tag-btn" data-cat="文教校园">🎓 文教校园</button>
-    <button class="tag-btn" data-cat="科技环保">🔬 科技环保</button>
-    <button class="tag-btn" data-cat="动作行为">⚡ 动作行为</button>
-  </div>
-
-  <!-- 错题训练 / 小测验 栏 -->
-  <div class="action-row">
-    <button class="btn-action btn-mistakes" id="mistakeModeBtn">
-      🎯 错题训练 ( <span id="mistakeCount">0</span> )
-    </button>
-    <button class="btn-action btn-quiz" id="randomQuizBtn">
-      📑 随机测试
-    </button>
-  </div>
-
-  <!-- 闪卡区域 -->
-  <div class="flashcard-wrapper" id="cardWrapper">
-    <div class="flashcard" id="cardInner">
-      
-      <!-- 正面 -->
-      <div class="card-face card-front">
-        <span class="card-index-tag" id="cardIndexTag">#1</span>
-        <div class="front-pinyin" id="cardPinyin">ān quán jiǎn chá</div>
-        <div class="front-word" id="cardOriginal">安全检查</div>
-        <div class="hint-tap">点击卡片翻转答案 ↺</div>
-      </div>
-
-      <!-- 背面 -->
-      <div class="card-face card-back">
-        <div>
-          <span class="back-badge">概述提炼</span>
-          <div class="back-answer-box">
-            <div class="back-answer-label">缩略语（推荐提炼词）：</div>
-            <div class="back-answer" id="cardAbbr">安检</div>
-          </div>
-          
-          <div class="back-meta-grid">
-            <div>
-              <div class="meta-title">分类类别</div>
-              <div class="meta-desc" id="cardCategory">行政法律</div>
+    <div id="app" class="w-full max-w-lg pt-4 flex flex-col">
+        <!-- 标题 -->
+        <header class="text-center mb-4">
+            <h1 class="text-2xl font-bold text-stone-700 tracking-wide word-title">缩略语</h1>
+            <div class="mt-3 bg-stone-200/60 rounded-full h-2 w-full overflow-hidden flex">
+                <div id="mastery-progress-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
             </div>
-            <div>
-              <div class="meta-title">字数精简效益</div>
-              <div class="meta-desc" id="cardSaving">4 字 → 2 字 (省50%)</div>
-            </div>
-          </div>
+            <p id="mastery-status" class="text-[10px] text-stone-400 mt-1.5 font-mono tracking-wider">已掌握 0 / 0 词 (0%)</p>
+        </header>
+
+        <!-- 功能按钮 -->
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <button onclick="startWeaknessTraining()" class="bg-white border border-stone-200 py-3 px-2 rounded-xl shadow-sm text-center text-stone-700 text-xs font-semibold hover:bg-stone-50 transition-all flex items-center justify-center gap-1.5">
+                🎯 开启错题专项训练 (<span class="text-amber-600 font-bold" id="wrong-count">0</span>)
+            </button>
+            <button onclick="startQuiz()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 px-2 rounded-xl shadow-md text-xs font-semibold hover:from-amber-600 hover:to-orange-600 transition-all flex items-center justify-center gap-1.5">
+                📝 开始小测验
+            </button>
         </div>
 
-        <div class="back-example-box">
-          <span class="example-badge">概述语境例句</span>
-          <div class="example-content" id="cardExample">进站前必须配合工作人员进行检查。 → 进站前须配合<b style="color:var(--primary-teal);">安检</b>。</div>
-        </div>
-      </div>
+        <!-- ==========================================
+             卡片容器 + 左右导航
+             ========================================== -->
+        <div class="relative flex items-center w-full mb-4">
+            <!-- 左导航按钮 -->
+            <button onclick="prevCard()" id="prev-btn" class="absolute left-0 z-10 bg-white/80 backdrop-blur-sm hover:bg-white border-2 border-stone-200 hover:border-amber-400 text-stone-700 w-10 h-10 rounded-full shadow-md transition-all flex items-center justify-center text-lg -ml-2">
+                ◀
+            </button>
+            
+            <!-- 卡片 -->
+            <div id="card-container" class="w-full h-[380px] sm:h-[400px] cursor-pointer relative mx-8">
+                <div id="flip-card" class="w-full h-full relative transform-style-3d">
+                    
+                    <!-- 卡片正面 -->
+                    <div class="absolute inset-0 bg-white rounded-2xl border border-stone-100 shadow-xl shadow-stone-200/50 flex flex-col items-center justify-center p-6 backface-hidden">
+                        <div id="card-word-ruby" class="word-title flex flex-wrap items-center justify-center text-5xl sm:text-6xl tracking-wide select-none">
+                            <!-- 由 JavaScript 动态生成带拼音的汉字 -->
+                        </div>
+                    </div>
 
+                    <!-- 卡片反面 -->
+                    <div class="absolute inset-0 bg-orange-50/40 rounded-2xl border-2 border-orange-100/60 shadow-xl shadow-stone-200/50 flex flex-col p-5 backface-hidden overflow-hidden">
+                        <div class="absolute inset-2 border border-amber-900/5 rounded-xl pointer-events-none"></div>
+
+                        <div class="relative z-10 flex flex-col justify-between h-full py-0.5">
+                            <!-- 中文释义 -->
+                            <div>
+                                <div class="inline-flex items-center gap-1 bg-amber-700/10 text-amber-800 text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-md mb-1.5">
+                                    <span>华文释义</span>
+                                </div>
+                                <p id="card-def-zh" class="text-[15px] font-semibold text-stone-800 leading-relaxed pl-1">暂无释义</p>
+                            </div>
+
+                            <!-- 翻译双栏 -->
+                            <div class="grid grid-cols-2 gap-3 border-t border-b border-amber-900/5 py-2.5 my-1">
+                                <div>
+                                    <div class="inline-flex items-center gap-1 bg-sky-100/60 text-sky-800 text-[9px] font-bold tracking-wider px-1.5 py-0.5 rounded mb-1">
+                                        <span>ENGLISH</span>
+                                    </div>
+                                    <p id="card-def-en" class="text-[11px] italic text-sky-900/70 leading-snug pl-0.5">No translation.</p>
+                                </div>
+                                <div>
+                                    <div class="inline-flex items-center gap-1 bg-rose-100/60 text-rose-800 text-[9px] font-bold tracking-wider px-1.5 py-0.5 rounded mb-1">
+                                        <span>MELAYU</span>
+                                    </div>
+                                    <p id="card-def-bm" class="text-[11px] text-rose-900/70 leading-snug pl-0.5 font-medium">Tiada terjemahan.</p>
+                                </div>
+                            </div>
+
+                            <!-- 例句 -->
+                            <div class="bg-white/80 border border-amber-950/5 p-3.5 rounded-xl shadow-sm">
+                                <div class="inline-flex items-center gap-1 bg-amber-900/5 text-amber-900/70 text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded mb-1.5">
+                                    <span>例句</span>
+                                </div>
+                                <p id="card-example" class="text-stone-700 text-[13px] font-medium leading-relaxed pl-0.5 tracking-wide">暂无例句。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- 右导航按钮 -->
+            <button onclick="nextCard()" id="next-btn" class="absolute right-0 z-10 bg-white/80 backdrop-blur-sm hover:bg-white border-2 border-stone-200 hover:border-amber-400 text-stone-700 w-10 h-10 rounded-full shadow-md transition-all flex items-center justify-center text-lg -mr-2">
+                ▶
+            </button>
+        </div>
+
+        <!-- 进度计数器 -->
+        <div class="text-center mb-3">
+            <span id="card-counter" class="text-xs text-stone-400 font-mono">0 / 0</span>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="w-full flex flex-col items-center gap-3">
+            <div class="grid grid-cols-2 gap-4 w-full">
+                <button onclick="markMastery(false)" class="bg-white border-2 border-stone-200 hover:border-red-400 hover:bg-red-50/30 text-stone-700 py-3 px-6 rounded-xl font-semibold shadow-sm transition-all text-center text-sm flex items-center justify-center gap-2">
+                    ❌ 待加强
+                </button>
+                <button onclick="markMastery(true)" class="bg-stone-800 hover:bg-stone-900 text-white py-3 px-6 rounded-xl font-semibold shadow-md transition-all text-center text-sm flex items-center justify-center gap-2">
+                    ✅ 已掌握
+                </button>
+            </div>
+            <p id="progress-indicator" class="text-[11px] text-stone-400 font-mono tracking-wider">进度：0 / 0</p>
+        </div>
     </div>
-  </div>
 
-  <!-- 掌握控制按钮 -->
-  <div class="btn-controls">
-    <button class="btn-mark btn-need-review" id="btnWeak">
-      ❌ 待加强
-    </button>
-    <button class="btn-mark btn-mastered" id="btnMaster">
-      ✅ 已掌握
-    </button>
-  </div>
+    <!-- Toast 消息 -->
+    <div id="toast-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
-  <div class="footer-progress" id="cardCounter">进度：1 / 500</div>
-</div>
+    <!-- Quiz 弹窗 -->
+    <div id="quiz-modal" class="fixed inset-0 bg-black/40 flex items-center justify-center hidden z-50 p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-5 relative flex flex-col max-h-[90vh]">
+            <button onclick="closeQuiz()" class="absolute top-3 right-3 text-stone-400 hover:text-stone-600 text-xl font-bold transition-colors">&times;</button>
+            <div class="border-b border-stone-100 pb-2 mb-3">
+                <h3 class="text-base font-bold text-stone-800 flex items-center gap-1" id="quiz-title-text">🎯 生词释义挑战</h3>
+                <div class="w-full bg-stone-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                    <div id="quiz-progress-bar" class="bg-amber-500 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <p id="quiz-q-num" class="text-[10px] text-stone-400 mt-1 font-mono">题目 1 / 5</p>
+            </div>
+            <div class="flex-1 overflow-y-auto mb-1 pr-1">
+                <div id="quiz-question-container">
+                    <h4 id="quiz-question-word" class="text-2xl font-serif font-bold text-stone-800 text-center my-3 tracking-wide">-</h4>
+                    <div id="quiz-options" class="space-y-2"></div>
+                </div>
+                <div id="quiz-result-container" class="hidden text-center py-6">
+                    <span class="text-4xl block animate-bounce">🏆</span>
+                    <h4 class="text-xl font-bold text-stone-800 mt-3">测验圆满结束！</h4>
+                    <p id="quiz-score" class="text-3xl font-black text-amber-600 my-3">0 / 5</p>
+                    <p id="quiz-eval" class="text-xs text-stone-500 mb-5 px-4">完成得不错！</p>
+                    <button onclick="startQuiz()" class="w-full py-2.5 bg-stone-800 text-white rounded-xl text-sm font-medium hover:bg-stone-900 transition-colors">
+                        再考一次
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<script>
-// 500个缩略语完整数据库 (全500项收录)
-const rawData = [
-  { pinyin: "ān quán jiǎn chá", orig: "安全检查", abbr: "安检", cat: "行政法律", eg: "在登机前必须经过____。" },
-  { pinyin: "ān quán lǐ shì huì", orig: "安全理事会", abbr: "安理会", cat: "行政法律", eg: "联合国____召开紧急会议。" },
-  { pinyin: "ān pái shè zhì", orig: "安排设置", abbr: "安设", cat: "动作行为", eg: "在大堂内部____了多台终端。" },
-  { pinyin: "ān dìng shēng huó", orig: "安定生活", abbr: "安居", cat: "社会民生", eg: "帮助灾黎重建家园以求____。" },
-  { pinyin: "àn zhōng diào chá", orig: "暗中调查", abbr: "暗访", cat: "动作行为", eg: "执法人员乔装后进行____。" },
-  { pinyin: "àn zhōng guān chá", orig: "暗中观察", abbr: "窥伺", cat: "动作行为", eg: "小偷在街角____过往行人。" },
-  { pinyin: "ào lín pǐ kè", orig: "奥林匹克运动会", abbr: "奥运会", cat: "文教校园", eg: "四年一度的体育盛事____。" },
-  { pinyin: "bǎi tuō pín kùn", orig: "摆脱贫困", abbr: "脱贫", cat: "社会民生", eg: "乡村大力发展生态农业以实现____。" },
-  { pinyin: "bǎi tuō kùn jìng", orig: "摆脱困境", abbr: "解困", cat: "动作行为", eg: "政府拨款以协助中小企业____。" },
-  { pinyin: "bǎo hù jiàn kāng", orig: "保护健康", abbr: "保健", cat: "社会民生", eg: "注重日常饮食与身体____。" },
-  { pinyin: "bǎo zhàng ān quán", orig: "保障安全", abbr: "保安", cat: "行政法律", eg: "大楼入口安排了严密的____队伍。" },
-  { pinyin: "bǎo liú cún gēn", orig: "保留存根", abbr: "备查", cat: "行政法律", eg: "交易单据复印一份以____。" },
-  { pinyin: "bǎo xiǎn jīn é", orig: "保险金额", abbr: "保额", cat: "经贸商业", eg: "这张保单的最高____达五十万。" },
-  { pinyin: "bǎo zhàng gōng gěi", orig: "保障供给", abbr: "保供", cat: "经贸商业", eg: "疫情期间全力稳价____。" },
-  { pinyin: "bǎo gǎn hù yǎng", orig: "保管护养", abbr: "保养", cat: "动作行为", eg: "机械零件需定期清洗____。" },
-  { pinyin: "běn guó huò pǐn", orig: "本国的货品", abbr: "国货", cat: "经贸商业", eg: "国民应热心支持自产____。" },
-  { pinyin: "bǐ cǐ shuāng fāng", orig: "彼此双方", abbr: "双方", cat: "社会民生", eg: "经调停后____终于握手言和。" },
-  { pinyin: "bǐ cǐ zhào liào", orig: "彼此互相照应", abbr: "互照", cat: "社会民生", eg: "离家在外的游子理应____。" },
-  { pinyin: "bù liáng fēng qì", orig: "不良风气", abbr: "歪风", cat: "社会民生", eg: "校方坚决遏制霸凌等____。" },
-  { pinyin: "biǎo dá xiè yì", orig: "表达谢意", abbr: "致谢", cat: "动作行为", eg: "受惠者登门向恩人____。" },
-  { pinyin: "biǎo dá yì jiàn", orig: "表达意见", abbr: "进言", cat: "动作行为", eg: "大臣向君王直言____。" },
-  { pinyin: "bāng zhù zhī chí", orig: "帮助支持", abbr: "扶持", cat: "动作行为", eg: "社会合力____弱势群体创业。" },
-  { pinyin: "bào zhǐ kān wù", orig: "报纸与刊物", abbr: "报刊", cat: "文教校园", eg: "图书馆订阅了各类本地____。" },
-  { pinyin: "bào gào xǐ xùn", orig: "报告喜讯", abbr: "报喜", cat: "动作行为", eg: "考上大学后立刻打电话回家____。" },
-  { pinyin: "bān fā jiǎng xiàng", orig: "颁发奖项", abbr: "颁奖", cat: "文教校园", eg: "校长在常会礼堂亲自____。" },
-  { pinyin: "bān lǐ jiāo jiē", orig: "办理交接", abbr: "交接", cat: "动作行为", eg: "前任职员正与新人____。" },
-  { pinyin: "biān zuǎn shū jí", orig: "编纂书籍", abbr: "编书", cat: "文教校园", eg: "学者耗费十年心血____。" },
-  { pinyin: "biàn gé jiù zhì", orig: "改变旧制", abbr: "革新", cat: "动作行为", eg: "传统工业通过技术____焕发生机。" },
-  { pinyin: "biàn bó lùn zhèng", orig: "辩驳说明", abbr: "辩驳", cat: "动作行为", eg: "面对质疑，他在台上据理____。" },
-  { pinyin: "bì miǎn zāi huò", orig: "避免灾祸", abbr: "避难", cat: "社会民生", eg: "村民携老扶幼入山____。" },
-  { pinyin: "cān jiā huì yì", orig: "参加会议", abbr: "参会", cat: "行政法律", eg: "各国代表受邀____。" },
-  { pinyin: "cān jiā kǎo shì", orig: "参加考试", abbr: "应考", cat: "文教校园", eg: "中五学子齐集考场____。" },
-  { pinyin: "cān guān yóu lǎn", orig: "参观游览", abbr: "观光", cat: "社会民生", eg: "每年许多游客前来历史古迹____。" },
-  { pinyin: "cháng qī jiān chí", orig: "长期坚持", abbr: "坚持", cat: "动作行为", eg: "唯有____训练才能打破纪录。" },
-  { pinyin: "cháng qī jū zhù", orig: "长期居住", abbr: "定居", cat: "社会民生", eg: "祖辈漂洋过海在此地____。" },
-  { pinyin: "chǎn shēng máo dùn", orig: "产生矛盾", abbr: "生隙", cat: "社会民生", eg: "因口角误会导致两人之间____。" },
-  { pinyin: "chǎn shēng fēn qí", orig: "产生不同意见", abbr: "分歧", cat: "动作行为", eg: "董事会对方案出现原则性____。" },
-  { pinyin: "chuán bō méi jiè", orig: "传播媒介", abbr: "传媒", cat: "文教校园", eg: "新时代数字____渗透大众生活。" },
-  { pinyin: "chuán shòu zhī shi", orig: "传授知识", abbr: "授业", cat: "文教校园", eg: "教师不仅教书更重在____传道。" },
-  { pinyin: "chūn xià qiū dōng", orig: "春夏季秋冬季", abbr: "四季", cat: "社会民生", eg: "高山温室一年____百花盛开。" },
-  { pinyin: "cái zhèng bù zhǎng", orig: "财政部长", abbr: "财长", cat: "行政法律", eg: "____在国会下议院宣读预算案。" },
-  { pinyin: "cǎi sè diàn shì", orig: "彩色电视", abbr: "彩电", cat: "科技环保", eg: "上世纪家家户户添置了首台____。" },
-  { pinyin: "chāo guò nián líng", orig: "超过年龄", abbr: "超龄", cat: "行政法律", eg: "因年龄超出规定被判定为____。" },
-  { pinyin: "chāo guò zài zhòng", orig: "超过载重量", abbr: "超载", cat: "行政法律", eg: "罗里严重____造成公路严重破损。" },
-  { pinyin: "chāo guò biāo zhǔn", orig: "逾越限度标准", abbr: "超标", cat: "科技环保", eg: "废气排放指数大幅____。" },
-  { pinyin: "chāo jí shì chǎng", orig: "超级市场", abbr: "超市", cat: "经贸商业", eg: "市民逢周末前往大卖场与____选购。" },
-  { pinyin: "chóu bèi wěi yuán huì", orig: "筹备委员会", abbr: "筹委会", cat: "文教校园", eg: "校庆____紧锣密鼓展开工作。" },
-  { pinyin: "mù jí zī jīn", orig: "募集筹集资金", abbr: "集资", cat: "经贸商业", eg: "创办人通过公众____创立华小。" },
-  { pinyin: "chá míng zhèng shí", orig: "调查证明", abbr: "查证", cat: "行政法律", eg: "警方在调取闭路电视后终获____。" },
-  { pinyin: "chá yuè jiǎn shì", orig: "检查核对", abbr: "查验", cat: "行政法律", eg: "海关人员逐一____通关者身份。" },
-  { pinyin: "chāi xiè chù diào", orig: "拆卸除掉", abbr: "拆除", cat: "动作行为", eg: "工地上危旧木桥已被工人____。" },
-  { pinyin: "cuò zì hé bié zì", orig: "错字和别字", abbr: "错别字", cat: "文教校园", eg: "概述作答时务必减少笔下____。" },
-  { pinyin: "chéng rèn guò cuò", orig: "承认过错", abbr: "认错", cat: "动作行为", eg: "知错能改，勇于____方为君子。" },
-  { pinyin: "chǔ bèi wù zī", orig: "储备物资", abbr: "储粮", cat: "经贸商业", eg: "逢雨季各户农家加紧____。" },
-  { pinyin: "cù jìn shēng chǎn", orig: "促进增产", abbr: "促产", cat: "经贸商业", eg: "利用科学施肥以有效____。" },
-  { pinyin: "cū bào duì dài", orig: "粗暴对待", abbr: "虐待", cat: "社会民生", eg: "爱护动物协会谴责一切____行为。" },
-  { pinyin: "cǎi fǎng jì lù", orig: "采纳录用", abbr: "录用", cat: "动作行为", eg: "经面试后三位应征者已被正式____。" },
-  { pinyin: "chè dǐ qīng chú", orig: "消除干净", abbr: "肃清", cat: "动作行为", eg: "严密排查以期全面____毒瘤。" },
-  { pinyin: "chéng fá jiè miǎn", orig: "惩罚处分", abbr: "惩戒", cat: "行政法律", eg: "对触犯校规者视情节实施____。" },
-  { pinyin: "chéng dān fèi yòng", orig: "负担成本费用", abbr: "承付", cat: "经贸商业", eg: "有关违约罚款全数由主办方____。" },
-  { pinyin: "dé dào lì yì", orig: "得到利益", abbr: "获利", cat: "经贸商业", eg: "商贾从中低买高卖以____。" },
-  { pinyin: "dá chéng xié yì", orig: "签署协议", abbr: "签约", cat: "经贸商业", eg: "两国双边经贸代表团正式____。" },
-  { pinyin: "dǐ kàng qīn hài", orig: "抵抗敌人侵害", abbr: "御敌", cat: "动作行为", eg: "将士在关隘前奋勇誓死____。" },
-  { pinyin: "diào chá yán jiū", orig: "调查研究", abbr: "调研", cat: "行政法律", eg: "教育局派员下乡深入基层____。" },
-  { pinyin: "diào chá fǎng wèn", orig: "调查探望", abbr: "走访", cat: "社会民生", eg: "议员深入水灾灾区逐户____。" },
-  { pinyin: "děng dài jiù yè", orig: "等待就业", abbr: "待业", cat: "社会民生", eg: "协助毕业大专生度过____时期。" },
-  { pinyin: "dì xià tiě dào", orig: "地下铁道", abbr: "地铁", cat: "科技环保", eg: "首都扩建全新双轨____系统。" },
-  { pinyin: "diàn lì gōng yìng", orig: "电力供应", abbr: "电供", cat: "科技环保", eg: "由于雷暴击中变压器导致局部____中断。" },
-  { pinyin: "diàn zǐ shāng wù", orig: "电子商务", abbr: "电商", cat: "经贸商业", eg: "传统零售店纷进驻网络____平台。" },
-  { pinyin: "diàn zǐ yóu xì", orig: "电子游戏玩具", abbr: "电玩", cat: "文教校园", eg: "青少年切莫沉迷屏幕里的虚拟____。" },
-  { pinyin: "diàn zǐ yóu jiàn", orig: "电子邮件", abbr: "电邮", cat: "科技环保", eg: "秘书已将会议备忘录通过____发送。" },
-  { pinyin: "diàn zǐ jì suàn jī", orig: "电子计算机", abbr: "电脑", cat: "科技环保", eg: "现代学生必备的学习工具是____。" },
-  { pinyin: "diàn shì guǎng bō", orig: "广播与电视", abbr: "广电", cat: "文教校园", eg: "大马官方____局全天播报新闻。" },
-  { pinyin: "dé zhì tǐ qún měi", orig: "德智体群美", abbr: "五育", cat: "文教校园", eg: "华文教育强调____并重的全人发展。" },
-  { pinyin: "duì wài mào yì", orig: "对外贸易", abbr: "对贸", cat: "经贸商业", eg: "港口货物吞吐量标志着国家____水平。" },
-  { pinyin: "dào qiè cái wù", orig: "盗窃财物", abbr: "盗窃", cat: "行政法律", eg: "嫌犯因夜闯民宅涉嫌____落网。" },
-  { pinyin: "duó qǔ jǐn biāo", orig: "赢取第一锦标", abbr: "夺标", cat: "文教校园", eg: "校羽毛球队在县学联赛中勇猛____。" },
-  { pinyin: "dú lì zhōng xué", orig: "华文独立中学", abbr: "独中", cat: "文教校园", eg: "全国六十一所____薪火相传。" },
-  { pinyin: "dòng yuán qún zhòng", orig: "唤起公众动员", abbr: "动员", cat: "动作行为", eg: "居委会紧急____居民清理沟渠。" },
-  { pinyin: "diū qì fàng qì", orig: "废弃荒废", abbr: "废弃", cat: "动作行为", eg: "路旁的旧铁道已被当局____多年。" },
-  { pinyin: "dū cù jiǎn chá", orig: "监督检查", abbr: "督查", cat: "行政法律", eg: "督学常临各校开展日常____。" },
-  { pinyin: "dài lǐ zhí wù", orig: "代理执行职务", abbr: "代职", cat: "行政法律", eg: "副校长在校长公出期间暂为____。" },
-  { pinyin: "dǐ zhì wài huò", orig: "拒绝购买抵制", abbr: "抵制", cat: "经贸商业", eg: "群众自发发起运动____高价垄断品。" },
-  { pinyin: "dǐ yā dài kuǎn", orig: "抵押借款", abbr: "抵押", cat: "经贸商业", eg: "农户以地契向银行作抵以求____。" },
-  { pinyin: "dà guī mó shēng chǎn", orig: "大规模生产", abbr: "量产", cat: "经贸商业", eg: "新机型通过流水线全面实现____。" },
-  { pinyin: "dài kuǎn gòu fáng", orig: "贷款购房借贷", abbr: "供楼", cat: "经贸商业", eg: "年轻上班族每月末均需____。" },
-  { pinyin: "dào niàn zhuī sī", orig: "哀悼追怀", abbr: "追思", cat: "社会民生", eg: "华社各界举行仪式____族魂林连玉。" },
-  { pinyin: "tiáo jié wù jià", orig: "平抑调节市价", abbr: "稳价", cat: "经贸商业", eg: "佳节统制价格令旨在全面____。" },
-  { pinyin: "tiáo jiě jiū fēn", orig: "排除化解争端", abbr: "调解", cat: "行政法律", eg: "长辈出面为邻里土地纠纷斡旋____。" },
-  { pinyin: "duàn jué wǎng lái", orig: "断绝交往联系", abbr: "绝交", cat: "社会民生", eg: "两人因背信弃义而宣告彻底____。" },
-  { pinyin: "fǎn duì tān wū", orig: "反对贪污受贿", abbr: "反贪", cat: "行政法律", eg: "反贪会严厉调查一切舞弊案以表____。" },
-  { pinyin: "fáng zhǐ dào qiè", orig: "防范阻止偷窃", abbr: "防盗", cat: "科技环保", eg: "商家安装闭路摄像机以作____。" },
-  { pinyin: "fàng qì quán lì", orig: "放弃行使权利", abbr: "弃权", cat: "行政法律", eg: "投票时部分议员选择弃投或____。" },
-  { pinyin: "fàng qì xué yè", orig: "中途放弃学业", abbr: "辍学", cat: "文教校园", eg: "因家贫被迫提早离开学堂导致____。" },
-  { pinyin: "fēn xī yán jiū", orig: "深入剖析研究", abbr: "研判", cat: "动作行为", eg: "专家针对数据图表进行深入____。" },
-  { pinyin: "fēn pī fā shòu", orig: "分配发放物资", abbr: "分发", cat: "动作行为", eg: "军警将救济干粮火速____予灾民。" },
-  { pinyin: "fáng wū dì chǎn", orig: "房屋土地产业", abbr: "房产", cat: "经贸商业", eg: "城市周边新开发了多个____项目。" },
-  { pinyin: "fáng bèi zāi hài", orig: "防止灾祸发生", abbr: "防灾", cat: "社会民生", eg: "雨季前应疏浚沟渠以利____。" },
-  { pinyin: "fǔ dǎo xīn lǐ", orig: "心理咨询辅导", abbr: "心辅", cat: "文教校园", eg: "学校设立专职师资开展学生____。" },
-  { pinyin: "fán róng chāng shèng", orig: "经济发达繁荣", abbr: "繁荣", cat: "社会民生", eg: "商业区街道车水马龙呈现一片____。" },
-  { pinyin: "fǎ lǜ fǎ guī", orig: "法律条例条规", abbr: "法规", cat: "行政法律", eg: "公民人人皆应谨守国家各项____。" },
-  { pinyin: "fú zhù pín kùn", orig: "救济援助贫困", abbr: "扶贫", cat: "社会民生", eg: "社会慈善基金定期下乡开展____。" },
-  { pinyin: "fā jué rén cái", orig: "发掘优秀人才", abbr: "掘才", cat: "文教校园", eg: "各类校际竞赛是华小发掘人才的好机会。" },
-  { pinyin: "fān xiū chóng jiàn", orig: "翻新重新修建", abbr: "翻新", cat: "动作行为", eg: "老旧危楼经过拆换结构后得以____。" },
-  { pinyin: "fáng zhì wū rǎn", orig: "控制消除污染", abbr: "治污", cat: "科技环保", eg: "河流沿线工厂被勒令停工限期____。" },
-  { pinyin: "fáng zhǐ yì bìng", orig: "预防控制传染病", abbr: "防疫", cat: "社会民生", eg: "戴口罩勤洗手乃是阻断病毒的____常识。" },
-  { pinyin: "fǔ yǎng jiào yù", orig: "抚养养育照顾", abbr: "抚育", cat: "社会民生", eg: "父母辛勤操劳只为将儿女成人____。" },
-  { pinyin: "fàn mài rén kǒu", orig: "贩运拐骗人口", abbr: "拐卖", cat: "行政法律", eg: "跨国人口贩运集团罪大恶极涉嫌____。" },
-  { pinyin: "fù zé guǎn lǐ", orig: "负责主管工作", abbr: "主管", cat: "行政法律", eg: "他是本公司负责技术的研发____。" },
-  { pinyin: "fèng xiàn lì liang", orig: "贡献付出力量", abbr: "奉献", cat: "动作行为", eg: "志工将周末韶华无私____给慈善。" },
-  { pinyin: "gǎn jué qì guān", orig: "感觉器官", abbr: "感官", cat: "科技环保", eg: "声光电影带来视觉与听觉的双重____享受。" },
-  { pinyin: "gōng rén xié huì", orig: "工人协会", abbr: "工协", cat: "行政法律", eg: "工友们联合成立了劳工维权的____。" },
-  { pinyin: "gōng yè hé nóng yè", orig: "工业和农业", abbr: "工农业", cat: "经贸商业", eg: "国家经济基础高度依赖于两项____发展。" },
-  { pinyin: "gōng yè hé shāng yè", orig: "工业和商业", abbr: "工商业", cat: "经贸商业", eg: "总商会联络全国____各界领袖。" },
-  { pinyin: "gōng zuò wěi yuán huì", orig: "工作委员会", abbr: "工委会", cat: "行政法律", eg: "筹备赛事的各项____成员通力协作。" },
-  { pinyin: "gōng gòng guān xi", orig: "公共关系协调", abbr: "公关", cat: "社会民生", eg: "企业危机往往需要极高水准的____技巧。" },
-  { pinyin: "gòng tóng hé zuò", orig: "共同协作合力", abbr: "协作", cat: "动作行为", eg: "团队成员唯有彼此____才能如期交付。" },
-  { pinyin: "gǎi shàn shēng huó", orig: "改善提升环境", abbr: "改善", cat: "社会民生", eg: "政府铺设柏油路有效____了村民出行。" },
-  { pinyin: "guó jiā yín háng", orig: "国家银行", abbr: "国行", cat: "经贸商业", eg: "大马____宣布调整隔夜政策利率。" },
-  { pinyin: "guó jiā qǐ yè", orig: "国家公办企业", abbr: "国企", cat: "经贸商业", eg: "涉及能源与电信命脉的大多属于____。" },
-  { pinyin: "guó mín zhōng xué", orig: "国民中学", abbr: "国中", cat: "文教校园", eg: "就读公立____的华裔子弟众多。" },
-  { pinyin: "guó mín xíng huá xiǎo", orig: "国民型华文小学", abbr: "华小", cat: "文教校园", eg: "母语教育从全马一千二百余所____起步。" },
-  { pinyin: "guó mín xiǎo xué", orig: "国民小学", abbr: "国小", cat: "文教校园", eg: "国语为主要媒介教学的公立____。" },
-  { pinyin: "gòu mǎi wù pǐn", orig: "采购置办物品", abbr: "采购", cat: "经贸商业", eg: "后勤主任前往批发市场统一____。" },
-  { pinyin: "gōng gěi hé xū qiú", orig: "供给和需求", abbr: "供求", cat: "经贸商业", eg: "价格波动主要是受到市场____的影响。" },
-  { pinyin: "guàn chè luò shí", orig: "落实政策践行", abbr: "落实", cat: "动作行为", eg: "校方强调务必将防蚊措施全面____。" },
-  { pinyin: "guī zhāng tiáo lì", orig: "行为规范条例", abbr: "规章", cat: "行政法律", eg: "进入实验室内务必遵循安全____。" },
-  { pinyin: "guān huái zhào gù", orig: "体恤关怀照顾", abbr: "关顾", cat: "社会民生", eg: "对独居孤寡老人应给予更多社会____。" },
-  { pinyin: "gòng tóng shǒu yuē", orig: "共同信守规定", abbr: "共守", cat: "行政法律", eg: "契约是两造必须信守承诺、自觉____。" },
-  { pinyin: "gǔ lì biǎo yáng", orig: "嘉奖勉励表彰", abbr: "嘉奖", cat: "文教校园", eg: "品学兼优的学子在周会上荣获校董____。" },
-  { pinyin: "guī huà shè jì", orig: "统筹规划设计", abbr: "规划", cat: "动作行为", eg: "城市建设必须具备长远眼光来____。" },
-  { pinyin: "gū suàn jià zhí", orig: "估算费用价值", abbr: "估值", cat: "经贸商业", eg: "专业核数师为该不动产做出合理____。" },
-  { pinyin: "gù dìng zī chǎn", orig: "固定资产产业", abbr: "固产", cat: "经贸商业", eg: "机器厂房均属于报表中的公司____。" },
-  { pinyin: "gǎi guò zì xīn", orig: "悔过自新从善", abbr: "悔改", cat: "动作行为", eg: "少年犯洗心革面，真诚立志____。" },
-  { pinyin: "guǎng fàn xuān chuán", orig: "大力推广宣扬", abbr: "广宣", cat: "动作行为", eg: "防止骨痛热症的常识需向社会____。" },
-  { pinyin: "gē shě fàng qì", orig: "忍痛割爱舍弃", abbr: "割舍", cat: "动作行为", eg: "面对两难取舍，他只得____旧物。" },
-  { pinyin: "gōng jī wǔ rù", orig: "语言攻击诽谤", abbr: "攻讦", cat: "动作行为", eg: "网络暴力充斥着无端的谩骂与相互____。" },
-  { pinyin: "gēn zōng zhuī chá", orig: "追踪调查底细", abbr: "追查", cat: "行政法律", eg: "刑警根据嫌犯车牌号码全力____。" },
-  { pinyin: "gǔ ròu tóng bāo", orig: "亲生兄弟姐妹", abbr: "手足", cat: "社会民生", eg: "哪怕异地求学，同胞____依然心连心。" },
-  { pinyin: "guān chá dū dǎo", orig: "视察巡视监督", abbr: "巡视", cat: "行政法律", eg: "官员走访边境哨卡进行深入____。" },
-  { pinyin: "huá rén shè huì", orig: "华人社会全体", abbr: "华社", cat: "社会民生", eg: "先辈立足南洋，积极贡献于本地____。" },
-  { pinyin: "huá yì qīng nián", orig: "华裔青年一代", abbr: "华青", cat: "社会民生", eg: "八大联合阵线积极引领当代____。" },
-  { pinyin: "huá wén jiào yù", orig: "华文母语教育", abbr: "华教", cat: "文教校园", eg: "守护母语薪火是马来西亚____的宿愿。" },
-  { pinyin: "huà xué féi liào", orig: "化学配制肥料", abbr: "化肥", cat: "科技环保", eg: "过度使用人造____易造成土壤板结。" },
-  { pinyin: "huà xué gōng yè", orig: "化学应用工业", abbr: "化工", cat: "科技环保", eg: "石油副产品提炼离不开先进____。" },
-  { pinyin: "huà xué zhì liáo", orig: "化学抗癌治疗", abbr: "化疗", cat: "社会民生", eg: "癌友在医生看护下按阶段完成后续____。" },
-  { pinyin: "huán jìng bǎo hù", orig: "环境保护治理", abbr: "环保", cat: "科技环保", eg: "少用塑料袋是举手之劳的日常____善举。" },
-  { pinyin: "hù xiāng bāng zhù", orig: "彼此互相帮助", abbr: "互助", cat: "社会民生", eg: "邻里守望，在水灾困境中彼此____。" },
-  { pinyin: "hù xiāng xué xí", orig: "相互学习借鉴", abbr: "互鉴", cat: "动作行为", eg: "两所姐妹校定期开班交流以便教研____。" },
-  { pinyin: "huī fù jiàn kāng", orig: "恢复元气健康", abbr: "康复", cat: "社会民生", eg: "经过物理治疗，运动健儿迅速得以____。" },
-  { pinyin: "huǎn hé máo dùn", orig: "调和缓和分歧", abbr: "调和", cat: "社会民生", eg: "长辈主动约谈以期____家庭争端。" },
-  { pinyin: "huái yí cāi cè", orig: "怀疑胡乱揣测", abbr: "猜疑", cat: "动作行为", eg: "人与人之间缺少坦诚必然滋生无端____。" },
-  { pinyin: "huì jí biān xiě", orig: "收集汇编成册", abbr: "汇编", cat: "文教校园", eg: "编辑组将历届优秀考题精选____。" },
-  { pinyin: "hǎi shàng yùn shū", orig: "海上轮船运输", abbr: "海运", cat: "科技环保", eg: "集装箱大宗货物主要依托远洋____。" },
-  { pinyin: "hǎi guān shuì wù", orig: "进出口关卡税", abbr: "关税", cat: "经贸商业", eg: "各港口严格依律征收外国货物____。" },
-  { pinyin: "háng kōng gǎng kǒu", orig: "客货民用机场", abbr: "机场", cat: "科技环保", eg: "国际航班准点降落在吉隆坡第一____。" },
-  { pinyin: "hé lǐ ān pái", orig: "统筹合理规划", abbr: "统筹", cat: "动作行为", eg: "面对多重课业压力中学生应善于____。" },
-  { pinyin: "huǎn jiě yā lì", orig: "纾解减轻负担", abbr: "减压", cat: "动作行为", eg: "适量运动与充足睡眠有助于考前____。" },
-  { pinyin: "huǐ huài míng yù", orig: "败坏抹黑声誉", abbr: "毁誉", cat: "行政法律", eg: "恶意造谣不仅损人且招致他人名声____。" },
-  { pinyin: "huī fù bāng jiāo", orig: "恢复建立邦交", abbr: "复交", cat: "行政法律", eg: "断交多年的两邻国终宣布实现全面____。" },
-  { pinyin: "huì jí zī jīn", orig: "集中聚拢财力", abbr: "集资", cat: "经贸商业", eg: "创办人集腋成裘，短时间内完成____。" },
-  { pinyin: "hū yù chàng dǎo", orig: "提倡发起号召", abbr: "倡导", cat: "社会民生", eg: "文教团体极力____社会全民阅读好书。" },
-  { pinyin: "hù xiāng miǎn lì", orig: "彼此互相勉励", abbr: "互勉", cat: "社会民生", eg: "同窗知己在备战大考之时并肩____。" },
-  { pinyin: "huāng fèi xué yè", orig: "放弃荒废功课", abbr: "荒废", cat: "文教校园", eg: "若是整日浑浑噩噩，必将导致年华____。" },
-  { pinyin: "háo wú yí wèn", orig: "不容置疑确凿", abbr: "无疑", cat: "文教校园", eg: "勤奋是一切成功背后的基石，此乃____。" },
-  { pinyin: "jì gōng xué xiào", orig: "技工技术学校", abbr: "技校", cat: "文教校园", eg: "职业教育大纲指导下的公私立____。" },
-  { pinyin: "jiā tíng bào lì", orig: "家庭内暴力行径", abbr: "家暴", cat: "行政法律", eg: "遭受人身虐待者应向警方投报拒绝____。" },
-  { pinyin: "jiā tíng fǎng wèn", orig: "走访了解家庭", abbr: "家访", cat: "文教校园", eg: "班主任周末抽空进行例常深入____。" },
-  { pinyin: "jiā tíng jiào shī", orig: "家庭辅导教师", abbr: "家教", cat: "文教校园", eg: "课后聘请专科____以加强数理概念。" },
-  { pinyin: "jiā yòng diàn qì", orig: "家庭使用电器", abbr: "家电", cat: "科技环保", eg: "冰箱、洗衣机等属于日常必须的____。" },
-  { pinyin: "jiào shī hé xué shēng", orig: "老师与在校学生", abbr: "师生", cat: "文教校园", eg: "运动会当天全校____齐心参与拔河赛。" },
-  { pinyin: "jiào xué gōng jù", orig: "课堂教学教具", abbr: "教具", cat: "文教校园", eg: "多媒体投影仪已成为教室中不可或缺的____。" },
-  { pinyin: "jié rì hé jià rì", orig: "节日与公共假日", abbr: "节假日", cat: "社会民生", eg: "逢____高速公路必然出现长车龙。" },
-  { pinyin: "jié yuē néng yuán", orig: "节约各种能源", abbr: "节能", cat: "科技环保", eg: "离开空室随时关灯乃是最基本的____做法。" },
-  { pinyin: "jiě jué kùn nan", orig: "摆脱化解困难", abbr: "解难", cat: "动作行为", eg: "导师不仅传道，亦常倾听学生为之____。" },
-  { pinyin: "jiē shòu jiào yù", orig: "进校学习受教", abbr: "就学", cat: "文教校园", eg: "保障每一位适龄儿童获得平等的____权利。" },
-  { pinyin: "jìn zhǐ xī yān", orig: "全面禁止吸烟", abbr: "禁烟", cat: "社会民生", eg: "公共餐馆与所有校园内部均全面____。" },
-  { pinyin: "jìn zhǐ dǔ bó", orig: "严厉禁止赌博", abbr: "禁赌", cat: "行政法律", eg: "法令三令五申，严防不良聚众与私下____。" },
-  { pinyin: "jīng jì yuán zhù", orig: "经济款项援助", abbr: "经援", cat: "经贸商业", eg: "国际货币机构对受灾国家发放紧急____。" },
-  { pinyin: "jǐng chá hé rén mín", orig: "警民守望合作", abbr: "警民", cat: "社会民生", eg: "社区定期召开____对话会以共商防范罪案。" },
-  { pinyin: "jū mín wěi yuán huì", orig: "社区居民委员会", abbr: "居委会", cat: "行政法律", eg: "睦邻计划中心常与住宅区____合作办巡逻。" },
-  { pinyin: "jīng shén miàn mào", orig: "精神思想面貌", abbr: "精神", cat: "文教校园", eg: "同学们步伐整齐，展现出昂扬的年轻____。" },
-  { pinyin: "jié shěng kāi zhī", orig: "节省压缩开销", abbr: "节流", cat: "经贸商业", eg: "景气低迷时除了开源更当注重紧缩____。" },
-  { pinyin: "jiāo tōng yùn shū", orig: "交通载运系统", abbr: "交通", cat: "科技环保", eg: "铁道与公路构成了整个国家的____动脉。" },
-  { pinyin: "jiǎn yàn hé shí", orig: "查验比对核实", abbr: "查验", cat: "行政法律", eg: "检疫人员仔细____进口冷冻食品批次。" },
-  { pinyin: "jiān dū guǎn lǐ", orig: "监督并进行管理", abbr: "监管", cat: "行政法律", eg: "金融机构必须受国家货币管理当局严格____。" },
-  { pinyin: "jiǎn miǎn shuì shōu", orig: "减免关税或税款", abbr: "减税", cat: "经贸商业", eg: "对低碳高新技术企业实施三年____鼓励。" },
-  { pinyin: "jiān zhí gōng zuò", orig: "主业以外兼职", abbr: "兼职", cat: "经贸商业", eg: "他为了贴补家用，每逢夜间出外兼任____。" },
-  { pinyin: "jí bìng yù fáng", orig: "控制并预防传染", abbr: "防疫", cat: "社会民生", eg: "接种疫苗是全社会构筑屏障的重要____手段。" },
-  { pinyin: "jí tǐ tǎo lùn", orig: "集体商榷探讨", abbr: "研商", cat: "动作行为", eg: "科委齐集办公室针对课程编排作深入____。" },
-  { pinyin: "jì lǜ chù fèn", orig: "严厉纪律处分", abbr: "处分", cat: "文教校园", eg: "犯下严重校规的学员遭到留校察看____。" },
-  { pinyin: "jì tuō āi sī", orig: "寄托内心哀思", abbr: "追思", cat: "社会民生", eg: "校友们相约于老校长墓前摆设鲜花以____。" },
-  { pinyin: "jì chéng yí zhì", orig: "继承先人遗志", abbr: "承志", cat: "社会民生", eg: "青年一辈理应继往开来、____再图进取。" },
-  { pinyin: "jiǎng qín fá lǎn", orig: "奖励勤劳惩戒懒惰", abbr: "奖勤罚懒", cat: "经贸商业", eg: "制度的核心在于赏罚分明并切实做到____。" },
-  { pinyin: "jiǎn jǔ jiē fā", orig: "告发检举不法", abbr: "举报", cat: "行政法律", eg: "知情公众挺身而出向反贪署提交实名____。" },
-  { pinyin: "jiàn lì zhì xù", orig: "维持安宁建立秩序", abbr: "维稳", cat: "行政法律", eg: "警力进驻混乱场馆以维持秩序与大局____。" },
-  { pinyin: "jiàn shè gōng chéng", orig: "施工作业营建", abbr: "施工", cat: "科技环保", eg: "多功能礼堂地基正在紧锣密鼓地开展____。" },
-  { pinyin: "jiàng dī chéng běn", orig: "降低成本开销", abbr: "降本", cat: "经贸商业", eg: "企业优化工艺流程，实现有效____增效。" },
-  { pinyin: "jiū zhèng cuò wù", orig: "匡正偏差错误", abbr: "纠偏", cat: "动作行为", eg: "若发现实验步骤偏差，应当机立断予以____。" },
-  { pinyin: "juān zèng kuǎn xiàng", orig: "奉献善款捐款", abbr: "捐款", cat: "社会民生", eg: "热心人士踊跃向灾区救援基金递交____。" },
-  { pinyin: "kǎ lù lǐ", orig: "热量计量卡路里", abbr: "卡", cat: "科技环保", eg: "每份饮品外包装皆明确标明含有多少大____。" },
-  { pinyin: "kē xué pǔ jí", orig: "科学知识普及", abbr: "科普", cat: "文教校园", eg: "举办常识展览旨在向大众推进基础____教育。" },
-  { pinyin: "kē xué yán jiū", orig: "学术与科学研究", abbr: "科研", cat: "文教校园", eg: "大学教授长期致力于癌症药理专项____。" },
-  { pinyin: "kē xué yǔ jì shù", orig: "科学技术手段", abbr: "科技", cat: "科技环保", eg: "推动社会现代化的关键第一生产力是____。" },
-  { pinyin: "kōng zhōng xiǎo jiě", orig: "机舱空中小姐", abbr: "空姐", cat: "社会民生", eg: "机组乘务员与受训合格的____礼貌服务旅客。" },
-  { pinyin: "kōng zhōng yù nàn", orig: "客机飞行空难", abbr: "空难", cat: "社会民生", eg: "历史上的那起重大____至今令人扼腕叹息。" },
-  { pinyin: "kōng zhōng yùn shū", orig: "飞机空中航运", abbr: "空运", cat: "经贸商业", eg: "保鲜生鲜蔬果多采用加急冷链____入市。" },
-  { pinyin: "kè fú kùn nan", orig: "克服艰难困苦", abbr: "克难", cat: "动作行为", eg: "全队上下在暴风雨中迎难而上、努力____。" },
-  { pinyin: "kuò dà fàn wéi", orig: "扩大推广范围", abbr: "推广", cat: "动作行为", eg: "把绿色种植的优良经验在全州逐步____。" },
-  { pinyin: "kǎo chá hé shí", orig: "审查考核检定", abbr: "考核", cat: "行政法律", eg: "年终绩效测评用于全面____每位职员表现。" },
-  { pinyin: "kāi tuò chuàng xīn", orig: "开创进取创新", abbr: "创新", cat: "动作行为", eg: "科技企业若不自主____便难免被淘汰。" },
-  { pinyin: "kuàng chǎn zī yuán", orig: "地下矿产资源", abbr: "矿产", cat: "科技环保", eg: "大马曾是世界享有盛誉的锡矿与丰富____之邦。" },
-  { pinyin: "kěn qiè qǐng qiú", orig: "苦苦恳求告求", abbr: "恳求", cat: "动作行为", eg: "他在法官面前声泪俱下地____宽恕。" },
-  { pinyin: "kòng zhì wù jià", orig: "抑制平抑物价", abbr: "平抑", cat: "经贸商业", eg: "官方出台限价令以有效____暴涨的日常菜价。" },
-  { pinyin: "kuà jìng mào yì", orig: "跨国界进出口贸易", abbr: "外贸", cat: "经贸商业", eg: "关税减让大幅活跃了东南亚区域的____。" },
-  { pinyin: "kǔ nàn jiān xīn", orig: "历尽艰苦辛酸", abbr: "艰辛", cat: "社会民生", eg: "老一辈在拓荒开埠岁月里历尽了无数____。" },
-  { pinyin: "kuān róng yuán liàng", orig: "宽免处分原谅", abbr: "宽恕", cat: "动作行为", eg: "见他认错态度诚恳，老师终选择报以____。" },
-  { pinyin: "kān chá cè liáng", orig: "勘察地形测量", abbr: "勘测", cat: "科技环保", eg: "工程师先期对水坝选址地貌开展精密____。" },
-  { pinyin: "kàng jù yòu huò", orig: "抵制抵御诱惑", abbr: "拒诱", cat: "动作行为", eg: "公仆应恪尽操守廉洁，坚决能够____。" },
-  { pinyin: "kè guān gōng zhèng", orig: "客观公正不偏", abbr: "公允", cat: "文教校园", eg: "辩论评委席必须秉持中立，给予参赛者____评判。" },
-  { pinyin: "làn yòng quán lì", orig: "滥用职权职务", abbr: "滥权", cat: "行政法律", eg: "政客若贪赃枉法、擅自____必遭法律制裁。" },
-  { pinyin: "lì shǐ hé dì lǐ", orig: "历史学与地理学", abbr: "史地", cat: "文教校园", eg: "文商班中学生必须潜心修读的____科目。" },
-  { pinyin: "lián hé tóu zī", orig: "双方联合出资", abbr: "合资", cat: "经贸商业", eg: "外商与本地企业携手创办全新的____公司。" },
-  { pinyin: "lián hé jǔ bàn", orig: "共同联合举办", abbr: "联办", cat: "文教校园", eg: "该项挥春比赛由雪隆各大华人宗乡会____。" },
-  { pinyin: "liú xíng xìng gǎn mào", orig: "流行性感冒病毒", abbr: "流感", cat: "社会民生", eg: "气候交替转季期极易诱发严重的季节性____。" },
-  { pinyin: "lǚ xíng zhí zé", orig: "履行尽职负责", abbr: "尽责", cat: "行政法律", eg: "身居岗位无论大小皆当全心全意做个____之人。" },
-  { pinyin: "lián luò xié shāng", orig: "接洽洽谈商讨", abbr: "洽商", cat: "经贸商业", eg: "两家巨头正就专利买卖开展深度商务____。" },
-  { pinyin: "lǐ mào dài kè", orig: "热情礼貌接待", abbr: "款待", cat: "社会民生", eg: "主人端出特制佳肴以隆重____四方宾朋。" },
-  { pinyin: "liǎo jiě shí qíng", orig: "知晓得知实情", abbr: "知情", cat: "行政法律", eg: "案发当日只有现场少数目击者真正____。" },
-  { pinyin: "lián xù bù duàn", orig: "连绵持续不绝", abbr: "持续", cat: "科技环保", eg: "暴雨____下了三天三夜，终酿成河水决堤。" },
-  { pinyin: "lián jié zì lǜ", orig: "清廉自守律己", abbr: "廉洁", cat: "行政法律", eg: "为人父母与公务人员皆须谨守本心以示____。" },
-  { pinyin: "láo dòng lì shì chǎng", orig: "就业劳力市场", abbr: "劳务市场", cat: "经贸商业", eg: "毕业季到来使得本季度____涌现找工潮。" },
-  { pinyin: "lín jìn dì qū", orig: "周围相邻地区", abbr: "邻里", cat: "社会民生", eg: "远亲不如近邻，搞好和睦友善的____关系。" },
-  { pinyin: "lǐng wù dào lǐ", orig: "豁然领会大悟", abbr: "顿悟", cat: "文教校园", eg: "听完先生一番开导，他终于如梦初醒、有所____。" },
-  { pinyin: "liú xiào chá kàn", orig: "留校察看记过", abbr: "记过", cat: "文教校园", eg: "该顽劣学生屡屡触犯底线因而受到从重____。" },
-  { pinyin: "liú lí shī suǒ", orig: "失去家园避难", abbr: "无家", cat: "社会民生", eg: "内战连年导致数百万人____沦为国际难民。" },
-  { pinyin: "lóng zhòng jǔ xíng", orig: "盛大举行仪式", abbr: "举行", cat: "动作行为", eg: "开学典礼暨新图书馆落成式于今早____。" },
-  { pinyin: "lǔ rén suǒ shú", orig: "绑架掠人勒赎", abbr: "绑架", cat: "行政法律", eg: "重案组火速破获并营救遭匪徒____的肉票。" },
-  { pinyin: "lǜ sè huán bǎo", orig: "低碳绿色环保", abbr: "低碳", cat: "科技环保", eg: "搭乘公共巴士通勤乃是值得倡导的____出行。" },
-  { pinyin: "lún xiàn xiàn luò", orig: "被敌军占领陷落", abbr: "沦陷", cat: "行政法律", eg: "二战时马来半岛在短时间内全面____日军手中。" },
-  { pinyin: "miàn duì miàn jiāo tán", orig: "面对面当面交谈", abbr: "面谈", cat: "动作行为", eg: "人事部门经理正与合格应聘人安排一对一____。" },
-  { pinyin: "míng què biǎo tài", orig: "公开发表立场态度", abbr: "表态", cat: "行政法律", eg: "针对该法案各阵营议员必须在限期内明确____。" },
-  { pinyin: "máng mù gēn cóng", orig: "盲从毫无主见", abbr: "盲从", cat: "动作行为", eg: "阅读网络碎片信息切忌人云亦云与不加思索的____。" },
-  { pinyin: "mǎn zú xū qiú", orig: "达到要求满足", abbr: "达标", cat: "经贸商业", eg: "产品经过十二道严苛检验，各项指标全部____。" },
-  { pinyin: "mì mì shāng yì", orig: "暗中密谋筹商", abbr: "密谋", cat: "动作行为", eg: "反贼深夜齐聚偏殿，企图____篡夺大权。" },
-  { pinyin: "miǎn huái xiān liè", orig: "追思悼念先贤", abbr: "缅怀", cat: "社会民生", eg: "华教同道每年逢华教节皆会齐聚林连玉墓前____。" },
-  { pinyin: "mǐn ruì guān chá", orig: "敏锐察觉洞见", abbr: "洞悉", cat: "动作行为", eg: "资深探员一眼便能____嫌疑人言谈中的破绽。" },
-  { pinyin: "móu qǔ sī lì", orig: "营私贪图私利", abbr: "贪私", cat: "行政法律", eg: "贪官利用核准执照便利擅自中饱私囊、大肆____。" },
-  { pinyin: "miǎn qiǎng wéi chí", orig: "勉力支撑维持", abbr: "苦撑", cat: "社会民生", eg: "面对通货膨胀，清贫家庭靠微薄救济____生计。" },
-  { pinyin: "miǎn shōu fèi yòng", orig: "不计酬劳全免", abbr: "免费", cat: "经贸商业", eg: "慈善诊所为当地六十岁以上长者提供____义诊。" },
-  { pinyin: "mín jiān chuán tǒng", orig: "乡土民间风俗", abbr: "民俗", cat: "社会民生", eg: "过端午裹粽与划龙舟属于代代相传的中华____。" },
-  { pinyin: "míng yù dì wèi", orig: "享有声誉名望", abbr: "名望", cat: "社会民生", eg: "老华社侨领一生行善，在乡野间享有极高____。" },
-  { pinyin: "míng què zhǐ shì", orig: "清楚分明指示", abbr: "明示", cat: "动作行为", eg: "校方通告中已清楚____所有集会集合时间。" },
-  { pinyin: "mái tóu kǔ gàn", orig: "辛勤扎实耕耘", abbr: "苦干", cat: "动作行为", eg: "无论天资高低，唯有凭借扎实的____方成大器。" },
-  { pinyin: "mì qiè pèi hé", orig: "紧密协作配合", abbr: "协作", cat: "动作行为", eg: "医护与后勤人员____，终使疫情趋于平缓。" },
-  { pinyin: "mén kǎn xiàn zhì", orig: "申请资格准入门槛", abbr: "资格", cat: "行政法律", eg: "该顶尖大学工程系设定了极严格的成绩录取____。" },
-  { pinyin: "mù jí juān kuǎn", orig: "募集赈灾善款", abbr: "募捐", cat: "社会民生", eg: "学长团沿街捧着铁罐为受灾家庭发起爱心____。" },
-  { pinyin: "máng qū sǐ jiǎo", orig: "疏忽失察盲区", abbr: "盲区", cat: "动作行为", eg: "安全防范必须细致入微，绝不留下哪怕一处____。" },
-  { pinyin: "mí tú zhī fǎn", orig: "翻然醒悟回头", abbr: "悔悟", cat: "动作行为", eg: "只要行差踏错之人能够早日____，社会皆当包容。" },
-  { pinyin: "mò shǒu chéng guī", orig: "因循守旧不改", abbr: "守旧", cat: "文教校园", eg: "做研究必须打破固有思维藩篱，不可一味____。" },
-  { pinyin: "nián líng yǔ zī lì", orig: "年龄以及任职资历", abbr: "年资", cat: "行政法律", eg: "公立机关在擢升高级官职时格外注重考量____。" },
-  { pinyin: "nèi bù jìng zhēng", orig: "内部争斗纷扰", abbr: "内讧", cat: "社会民生", eg: "商会高层因权力瓜分引发____导致组织分裂。" },
-  { pinyin: "nóng cūn hé chéng shì", orig: "农村与城市区域", abbr: "城乡", cat: "经贸商业", eg: "缩小基础设施发展差距是解决____失衡的关键。" },
-  { pinyin: "nǔ lì gōng zuò", orig: "勤劳恪尽职守", abbr: "勤勉", cat: "动作行为", eg: "小李由于平日办事踏实____，深得上司赞赏。" },
-  { pinyin: "nán yǐ wàng huái", orig: "铭刻记于心底", abbr: "铭记", cat: "文教校园", eg: "老师当年的敦敦教诲与启蒙恩泽令人永生____。" },
-  { pinyin: "nǐ dìng cǎo àn", orig: "起草拟写公文", abbr: "起草", cat: "行政法律", eg: "法务秘书受命连夜____明日将签署的备忘录。" },
-  { pinyin: "nǐng jù lì liang", orig: "团结聚拢力量", abbr: "聚力", cat: "动作行为", eg: "全校众志成城、相互____，共度资金短缺难关。" },
-  { pinyin: "néng shàng néng xià", orig: "变通灵活任用", abbr: "变通", cat: "行政法律", eg: "管理团队制度应打破资历陈规并切实做到____。" },
-  { pinyin: "nàn mín shōu róng suǒ", orig: "难民避难收容所", abbr: "庇护所", cat: "社会民生", eg: "联合国维和部队在边境临时设立了三座____。" },
-  { pinyin: "niǔ zhuǎn jú miàn", orig: "扭转逆转局势", abbr: "逆转", cat: "动作行为", eg: "下半场主力队员带伤替补上阵，最终奇迹般____。" },
-  { pinyin: "péi yǎng hé xùn liàn", orig: "培养与训练技能", abbr: "培训", cat: "文教校园", eg: "新入职教师必须参加由师训处组织的密集____。" },
-  { pinyin: "píng shěn wěi yuán", orig: "评审委员团", abbr: "评委", cat: "文教校园", eg: "本次全国辩论大赛特邀大专辩论导师担任____。" },
-  { pinyin: "pò huài guī jǔ", orig: "突破惯例非常规", abbr: "破例", cat: "行政法律", eg: "鉴于其特殊贡献，校董会一致同意破格____晋升。" },
-  { pinyin: "píng héng fā zhǎn", orig: "平衡均等发展", abbr: "均衡", cat: "社会民生", eg: "东西马两地基础交通建设必须力求保持____。" },
-  { pinyin: "pī zhǔn tóng yì", orig: "审理核准同意", abbr: "获批", cat: "行政法律", eg: "扩建华中校舍的公函在奔走数年后终顺利____。" },
-  { pinyin: "pī yuè xiū gǎi", orig: "批改纠正作业", abbr: "批改", cat: "文教校园", eg: "华文老师伏案通宵只为悉心____学生命题作文。" },
-  { pinyin: "pài qiǎn rén yuán", orig: "委任派遣人员", abbr: "派员", cat: "行政法律", eg: "卫生署已连夜____前往疫区展开消毒扑杀。" },
-  { pinyin: "pái chú yì jǐ", orig: "排挤打击同仁", abbr: "排挤", cat: "动作行为", eg: "小肚鸡肠者在部门内部结党私斗并擅自____他人。" },
-  { pinyin: "pàn chǔ tú xíng", orig: "依法判处徒刑", abbr: "判刑", cat: "行政法律", eg: "罪犯在铁证面前俯首认罪，最终获法官严厉____。" },
-  { pinyin: "pāo qì piān jiàn", orig: "放下成见偏见", abbr: "弃见", cat: "社会民生", eg: "多元文化背景下各族群当相互倾听、彻底____。" },
-  { pinyin: "pǔ jí tuī guǎng", orig: "面向大众推广普及", abbr: "普及", cat: "科技环保", eg: "智能手机的面世使得数字金融实现了全国____。" },
-  { pinyin: "pī pàn zhǐ zé", orig: "批评指责诟病", abbr: "抨击", cat: "动作行为", eg: "主流社论严正撰文____这种唯利是图的行径。" },
-  { pinyin: "pán diǎn wù zī", orig: "清点库存盘查", abbr: "盘点", cat: "经贸商业", eg: "仓库主管每逢季末必带领工友连夜进行库存____。" },
-  { pinyin: "pín kùn luò hòu", orig: "贫穷落后匮乏", abbr: "贫困", cat: "社会民生", eg: "扶持山村走出世代的____是教育的根本使命。" },
-  { pinyin: "pǐn gé xiū yǎng", orig: "道德品质修养", abbr: "品德", cat: "文教校园", eg: "求学问之道，除了才华横溢更重在端正自身____。" },
-  { pinyin: "pò bù jí dài", orig: "急于求成急躁", abbr: "急躁", cat: "动作行为", eg: "做事应讲求水到渠成，切莫浮躁冒进、过于____。" },
-  { pinyin: "pū zhāng làng fèi", orig: "铺张挥霍无度", abbr: "挥霍", cat: "社会民生", eg: "虽家境优渥，仍当秉持节俭家训不可恣意____。" },
-  { pinyin: "píng kōng niē zào", orig: "无中生有凭空虚构", abbr: "杜撰", cat: "行政法律", eg: "不实的新闻报道纯系个别不良媒体捕风捉影与____。" },
-  { pinyin: "píng xī fèn nù", orig: "安抚平息愤怒", abbr: "安抚", cat: "动作行为", eg: "负责人第一时间出面致歉并退款以尽快____受害者。" },
-  { pinyin: "piào shù xiāng děng", orig: "得票相等不分胜负", abbr: "打平", cat: "行政法律", eg: "双方首轮投票中____，只能移交全院再次表决。" },
-  { pinyin: "qǔ bǎo shì fàng", orig: "获准取保获释", abbr: "保释", cat: "行政法律", eg: "嫌犯代表律师向法庭递交申请并成功获准____出外。" },
-  { pinyin: "qǔ dé shèng lì", orig: "大获全胜告捷", abbr: "获胜", cat: "文教校园", eg: "经历五局鏖战，校排球队力挫强敌斩获首名____。" },
-  { pinyin: "qīng lǐ zhěng dùn", orig: "严加整顿清理", abbr: "整顿", cat: "行政法律", eg: "交通部联合市政厅向违章路段实施全面____。" },
-  { pinyin: "qiáng huà xùn liàn", orig: "强化集中集训", abbr: "集训", cat: "文教校园", eg: "国手前往封闭式基地进行为期一个月的强化____。" },
-  { pinyin: "qīng tīng sù qiú", orig: "听取采纳呼声诉求", abbr: "听取", cat: "社会民生", eg: "代议士走访老街坊，用心____小贩提出的心声。" },
-  { pinyin: "qū dòng fā zhǎn", orig: "驱动促进向前", abbr: "促进", cat: "经贸商业", eg: "现代半导体产业链是____大马工业升级的引擎。" },
-  { pinyin: "qī piàn lüè duó", orig: "欺诈掠夺巧取", abbr: "诈骗", cat: "行政法律", eg: "利用虚假投资幌子开展跨国____的黑帮终被捣毁。" },
-  { pinyin: "qiān shǔ qì yuē", orig: "签署协议结约", abbr: "签约", cat: "经贸商业", eg: "双方在友好氛围中举行了隆重的战略合作____。" },
-  { pinyin: "qián xīn zuān yán", orig: "刻苦钻研自修", abbr: "钻研", cat: "文教校园", eg: "他在冷清的实验室中____十年终见成效。" },
-  { pinyin: "qiān nù yú rén", orig: "归咎他人推诿迁怒", abbr: "迁怒", cat: "动作行为", eg: "自身做事怠惰却四处____同事，实乃缺乏涵养。" },
-  { pinyin: "qīn zhàn gōng wù", orig: "侵占吞并公家财产", abbr: "侵吞", cat: "行政法律", eg: "涉案出纳因暗中____公款遭到廉政公署立案。" },
-  { pinyin: "qiān xiàn dā qiáo", orig: "从中撮合中介牵线", abbr: "牵线", cat: "经贸商业", eg: "经过热心学长居中____，母校与大学建立起合作。" },
-  { pinyin: "qīn shēn tǐ huì", orig: "亲自经历体验", abbr: "亲历", cat: "社会民生", eg: "唯有亲赴灾区一线____水患，方知民间疾苦。" },
-  { pinyin: "qiáng cí duó lǐ", orig: "强辩狡辩推脱", abbr: "狡辩", cat: "动作行为", eg: "在铁一般的证据面前，肇事者依然妄图强词____。" },
-  { pinyin: "qīng xī míng liǎo", orig: "明白清晰清楚", abbr: "明晰", cat: "文教校园", eg: "概述要旨结构必须做到条理井然、层次____。" },
-  { pinyin: "qū zhú chū jìng", orig: "驱逐并遣送离境", abbr: "遣返", cat: "行政法律", eg: "逾期滞留者被移民局依法处以罚金并安排强制____。" },
-  { pinyin: "qīn pèi jìng yǎng", orig: "敬仰钦佩佩服", abbr: "钦佩", cat: "文教校园", eg: "老教师数十载默默耕耘的精神令人肃然起敬与____。" },
-  { pinyin: "qióng kùn liáo dǎo", orig: "穷困走投无路", abbr: "穷困", cat: "社会民生", eg: "他早年四处碰壁、生活____，却未曾言弃。" },
-  { pinyin: "quàn gào jiè miǎn", orig: "规劝相告勉诫", abbr: "规劝", cat: "动作行为", eg: "父母千叮咛万嘱咐地好言____，他却充耳不闻。" },
-  { pinyin: "qǐ qiú yuán liàng", orig: "乞求告罪宽恕", abbr: "认错", cat: "动作行为", eg: "自知罪孽深重，他悔不当初地低头向公众____。" },
-  { pinyin: "rén mín shēng huó", orig: "人民百姓生活", abbr: "民生", cat: "社会民生", eg: "政府施政以保障水电粮价等关键____为第一优先。" },
-  { pinyin: "rén mín yì jiàn", orig: "民众意见想法", abbr: "民意", cat: "行政法律", eg: "大选结果最真实、最直观地体现了当下的普遍____。" },
-  { pinyin: "rén mín yuàn hèn", orig: "大众百姓民怨", abbr: "民怨", cat: "社会民生", eg: "苛捐杂税若是层出不穷，久而久之必然导致深重____。" },
-  { pinyin: "rén shòu bǎo xiǎn", orig: "人寿人身保险", abbr: "寿险", cat: "经贸商业", eg: "理财顾问建议及早为家庭支柱购买一份足额____。" },
-  { pinyin: "rèn shí liǎo jiě", orig: "认知理解了解", abbr: "认知", cat: "文教校园", eg: "拓展阅读能够彻底刷新我们对客观物理世界的____。" },
-  { pinyin: "rèn zhēn tīng cóng", orig: "顺从遵从服从", abbr: "服从", cat: "动作行为", eg: "纪律部队受训人员无论面对何种指令皆须绝对____。" },
-  { pinyin: "rén lì zī yuán", orig: "人力人才资源", abbr: "人资", cat: "经贸商业", eg: "大公司下设专门负责招聘与培训考核的____部门。" },
-  { pinyin: "róng rù shè huì", orig: "适应融入社会环境", abbr: "融入", cat: "社会民生", eg: "毕业生应积极调整个性以便更好____职场与社群。" },
-  { pinyin: "rěn shòu chǐ rǔ", orig: "忍辱隐忍克制", abbr: "隐忍", cat: "动作行为", eg: "为了顾全全局大局，他不得不强压怒火选择____。" },
-  { pinyin: "rèn miǎn zhí yuán", orig: "调整岗位任免", abbr: "任免", cat: "行政法律", eg: "内阁每隔数年将进行人员调整与重大职务的____。" },
-  { pinyin: "rè xīn gōng yì", orig: "慈善奉献热心", abbr: "慈善", cat: "社会民生", eg: "本地富商数十年来捐资助学，深得各界敬仰的____心。" },
-  { pinyin: "róng huá fù guì", orig: "功名利禄富贵", abbr: "名利", cat: "社会民生", eg: "人生至要不在于追逐虚无的____，而在于心安理得。" },
-  { pinyin: "rù xué shēn qǐng", orig: "申请入读进校", abbr: "申请入读", cat: "文教校园", eg: "家长在截止日期前须向教育局提交华小一届____。" },
-  { pinyin: "róng nà bāo róng", orig: "宽容纳众包容", abbr: "包容", cat: "社会民生", eg: "多元种族社会必须建立在求同存异与相互____上。" },
-  { pinyin: "rǎo luàn zhì ān", orig: "破坏秩序扰乱", abbr: "乱序", cat: "行政法律", eg: "醉酒滋事、聚众闹事者将按非法____受到严办。" },
-  { pinyin: "sān gāng wǔ cháng", orig: "传统三纲五常", abbr: "纲常", cat: "社会民生", eg: "古代封建礼法把伦理秩序具体规定为严苛的____。" },
-  { pinyin: "shēng wù huà xué", orig: "生物学与化学", abbr: "生化", cat: "科技环保", eg: "该农药属于烈性高毒的____制剂，严禁任意喷洒。" },
-  { pinyin: "shào nián ér tóng", orig: "少年儿童幼儿", abbr: "少儿", cat: "社会民生", eg: "图书馆专为学龄前孩子设立了明亮舒适的____读物区。" },
-  { pinyin: "shè huì qīng nián", orig: "社会在职青年", abbr: "社青", cat: "社会民生", eg: "各类青年运动旨在凝聚广泛的基层____力量。" },
-  { pinyin: "shì jiè wèi shēng zǔ zhī", orig: "世界卫生组织", abbr: "世卫组织", cat: "行政法律", eg: "____日内瓦总部发布全球公共卫生紧急防范指南。" },
-  { pinyin: "shēng yīn kòng zhì", orig: "声音感应控制", abbr: "声控", cat: "科技环保", eg: "智能公寓走廊全部配备了节能的____照明灯具。" },
-  { pinyin: "shòu zāi qíng kuàng", orig: "受灾严重情况", abbr: "灾情", cat: "社会民生", eg: "水库决口导致下游十数个村庄的____持续扩大。" },
-  { pinyin: "shòu zāi rén mín", orig: "水灾灾民灾黎", abbr: "灾黎", cat: "社会民生", eg: "救济车队挨家挨户将干粮分发到安置所里的____手中。" },
-  { pinyin: "suān tián kǔ là xián", orig: "酸甜苦辣咸", abbr: "五味", cat: "社会民生", eg: "尝遍人生百态方知柴米油盐中的各色____杂陈。" },
-  { pinyin: "shēn tǐ jiǎn chá", orig: "身体全面检查", abbr: "体检", cat: "社会民生", eg: "中学生在升读大专之前均需接受指定医院的____。" },
-  { pinyin: "shēn tǐ lì xíng", orig: "亲身践行力行", abbr: "践行", cat: "动作行为", eg: "道德规范不该空谈口号，而当转化为自己的日常____。" },
-  { pinyin: "shōu jí zhěng lǐ", orig: "整理归纳汇总", abbr: "归纳", cat: "动作行为", eg: "在概述作答中务必将文中分散的事实加以有效____。" },
-  { pinyin: "shāng yì tǎo lùn", orig: "共同研讨商议", abbr: "商讨", cat: "动作行为", eg: "董事会与校长齐聚一堂共同____明年新校舍规划。" },
-  { pinyin: "zāo shòu jù dà sǔn shī", orig: "遭受重创巨额损失", abbr: "受创", cat: "经贸商业", eg: "受暴风雨袭击，沿岸养殖业在此役中遭到了重大____。" },
-  { pinyin: "shēn sī shú lǜ", orig: "深思熟虑权衡", abbr: "慎思", cat: "动作行为", eg: "面临人生升学重大交叉路口，务必三思而行、____斟酌。" },
-  { pinyin: "shēn chū yuán shǒu", orig: "伸出援手施救", abbr: "施援", cat: "动作行为", eg: "同胞落难之时，海内外华侨纷纷自发慷慨____。" },
-  { pinyin: "shè lì jī gòu", orig: "建立组建部门机构", abbr: "组建", cat: "行政法律", eg: "校方宣布下设反校园霸凌特别联合____。" },
-  { pinyin: "sàng shī xìn xīn", orig: "灰心气馁丧失信心", abbr: "气馁", cat: "文教校园", eg: "一两次测验失利不要紧，至要紧的是切莫轻易____。" },
-  { pinyin: "shěn wèn pàn jué", orig: "审判司法问罪", abbr: "审判", cat: "行政法律", eg: "正义虽或迟到但从不缺席，罪首终难逃法庭____。" },
-  { pinyin: "shēng chǎn guò shèng", orig: "产品积压滞销过剩", abbr: "滞销", cat: "经贸商业", eg: "国际水果丰收却因货柜短缺而在码头大量____。" },
-  { pinyin: "shū sǐ bó dòu", orig: "拼搏死战对抗", abbr: "拼搏", cat: "动作行为", eg: "守军面对数倍于己的敌军，展开了惊天地泣鬼神的____。" },
-  { pinyin: "shù lì diǎn fàn", orig: "树立典范榜样", abbr: "立范", cat: "文教校园", eg: "师长以身作则方能在三尺讲台为莘莘学子____。" },
-  { pinyin: "shàn yǎng fù mǔ", orig: "照拂尽孝赡养老人", abbr: "尽孝", cat: "社会民生", eg: "成年儿女在道德与法律层面上均负有义务善意____。" },
-  { pinyin: "sī lì xūn xīn", orig: "徇私枉法自肥", abbr: "徇私", cat: "行政法律", eg: "官员经商涉嫌利益输送，显然是明目张胆的____舞弊。" },
-  { pinyin: "sì yì huī huò", orig: "肆意挥霍浪费", abbr: "挥霍", cat: "社会民生", eg: "即使坐拥金山银山，若整日这般____也必将坐吃山空。" },
-  { pinyin: "shēng míng yuǎn bō", orig: "享誉闻名遐迩", abbr: "享誉", cat: "文教校园", eg: "这所具有百年校史的中华名校在大马内外____四方。" },
-  { pinyin: "shū sàn bì nàn", orig: "撤离疏散避难", abbr: "疏散", cat: "社会民生", eg: "听到消防警报拉响后，全校按指定应急路线迅速____。" },
-  { pinyin: "sù mù zhuāng yán", orig: "庄严肃穆静立", abbr: "肃穆", cat: "文教校园", eg: "升旗仪式举行之际，操场上全体静立、一片____。" },
-  { pinyin: "sǔn gōng féi sī", orig: "贪渎腐败损公利", abbr: "贪渎", cat: "行政法律", eg: "严打一切侵吞公众基金、中饱私囊的____分子。" },
-  { pinyin: "suí bō zhú liú", orig: "随波逐流无定力", abbr: "盲从", cat: "动作行为", eg: "青年在社会浪潮里应坚持自我，万不可人云亦云、____。" },
-  { pinyin: "tōng huò péng zhàng", orig: "通货膨胀物价飞涨", abbr: "通胀", cat: "经贸商业", eg: "央行通过上调隔夜拆借息率以压制日益高企的____。" },
-  { pinyin: "tōng huò jǐn suō", orig: "物价下跌通货紧缩", abbr: "通缩", cat: "经贸商业", eg: "市场需求极其疲软导致整个宏观经济滑向____困境。" },
-  { pinyin: "tǒng yī kǎo shì", orig: "统考与统一测试", abbr: "统考", cat: "文教校园", eg: "全国华文独中高中三学子每年底齐聚迎战____。" },
-  { pinyin: "tuō lí wén máng", orig: "扫除脱离文盲", abbr: "脱盲", cat: "文教校园", eg: "成人夜校设立使得大量早期劳工得以读书写字、完成____。" },
-  { pinyin: "tí gāo xiào shuài", orig: "提升效益与效率", abbr: "增效", cat: "经贸商业", eg: "推行自动化智能流水线旨在为传统制造提质____。" },
-  { pinyin: "tí gōng yuán zhù", orig: "提供援助援助支持", abbr: "施援", cat: "社会民生", eg: "慈善团体在震后数小时内火速赶抵现场慷慨____。" },
-  { pinyin: "tí qián yù fáng", orig: "预警防备在前", abbr: "防备", cat: "科技环保", eg: "气象局发布强降雨预报，要求沿海居民提前____。" },
-  { pinyin: "tǐ yù guǎn yùn dòng chǎng", orig: "场馆场地", abbr: "场馆", cat: "文教校园", eg: "各大赛事的筹备极大利用了市中心的室内综合____。" },
-  { pinyin: "tiáo jié fēn zhēng", orig: "劝解调停纷争", abbr: "调停", cat: "行政法律", eg: "在资深法官出面斡旋下，两造最终同意接受____。" },
-  { pinyin: "tuī xiè zé rèn", orig: "推诿过错甩卸责任", abbr: "推诿", cat: "动作行为", eg: "面对工作失误，主管当正视反省而非肆意____下属。" },
-  { pinyin: "tàn suǒ zuān yán", orig: "探究真相探索", abbr: "探索", cat: "文教校园", eg: "求知若渴的青年学子在宇宙天文学领域孜孜不倦地____。" },
-  { pinyin: "tán pàn pò liè", orig: "协商决裂谈判不成", abbr: "决裂", cat: "经贸商业", eg: "双方因核心权益互不让步，导致马拉松式的会谈最终____。" },
-  { pinyin: "tòng gǎi qián fēi", orig: "悔过自新改过", abbr: "改过", cat: "动作行为", eg: "出狱后的他洗心革面，真诚立志____、重新做人。" },
-  { pinyin: "tóng gān gòng kǔ", orig: "患难同甘共苦", abbr: "共甘苦", cat: "社会民生", eg: "夫妻二人创业起步艰难，但彼此相濡以沫、一路____。" },
-  { pinyin: "tóu jī qǔ qiǎo", orig: "走捷径投机取巧", abbr: "取巧", cat: "文教校园", eg: "学习是一砖一瓦的积累，切莫心存侥幸妄想____。" },
-  { pinyin: "tān wū fǔ bài", orig: "贪腐受贿索贿", abbr: "贪腐", cat: "行政法律", eg: "廉政公署成立目的在于全面遏制任何层面的____。" },
-  { pinyin: "tí chàng jiǎn pǔ", orig: "崇尚节约崇俭", abbr: "崇俭", cat: "社会民生", eg: "先贤遗风强调勤俭持家，家家户户皆应崇俭去奢。" },
-  { pinyin: "tǐ xù mín qíng", orig: "察验民意恤民", abbr: "恤民", cat: "行政法律", eg: "地方官微服出巡只为体恤民瘼、深入民间以期真实____。" },
-  { pinyin: "tiān zī cōng yǐng", orig: "生性聪颖敏悟", abbr: "聪颖", cat: "文教校园", eg: "这孩子自幼____，稍加点拨便能解开奥数难题。" },
-  { pinyin: "tíng zhí fǎn xǐng", orig: "勒令停止职务", abbr: "停职", cat: "行政法律", eg: "涉事警官由于违反执勤条例而立即被给予撤岗____。" },
-  { pinyin: "táo tài luò hòu", orig: "剔除淘汰落后产能", abbr: "淘汰", cat: "经贸商业", eg: "工业革命飞速演进必将无情____高耗能的落后设备。" },
-  { pinyin: "tuán jié hù zhù", orig: "齐心协力团结", abbr: "齐心", cat: "动作行为", eg: "全班同学相互包容、____抗击难关，定创辉煌。" },
-  { pinyin: "diào bīng qiǎn jiàng", orig: "调遣兵力队伍", abbr: "调遣", cat: "行政法律", eg: "总指挥根据各处汛情临场应变，从容完成人员____。" },
-  { pinyin: "tóu táo bào lǐ", orig: "知恩还情报恩", abbr: "报恩", cat: "社会民生", eg: "受人滴水之恩理当涌泉相报，古人谓之____是也。" },
-  { pinyin: "tuǒ xié ràng bù", orig: "妥协让步互谅", abbr: "让步", cat: "动作行为", eg: "和谈要取得实质进展，两方皆须拿出诚意做适当____。" },
-  { pinyin: "wài jiāo bù zhǎng", orig: "外交部长官", abbr: "外长", cat: "行政法律", eg: "东盟多国____齐聚吉隆坡商讨南海航行安全问题。" },
-  { pinyin: "wǎng shàng shāng diàn", orig: "网络商店网店", abbr: "网店", cat: "经贸商业", eg: "大学毕业生兼职开设个性化____，收入颇丰。" },
-  { pinyin: "wéi fǎn fǎ lǜ", orig: "触犯违反法律", abbr: "违法", cat: "行政法律", eg: "任何人无论身居何等高位，一旦作奸犯科皆属____。" },
-  { pinyin: "wéi fǎn guī zé", orig: "违背章程规则", abbr: "违规", cat: "文教校园", eg: "考场内携带任何电子通讯装置均属严重____。" },
-  { pinyin: "wén huà hé jiào yù", orig: "文化与教育事业", abbr: "文教", cat: "文教校园", eg: "华社三大支柱一般公推为华校、华团与华文报等____力量。" },
-  { pinyin: "wǒ guó rén mín", orig: "全体国民国人", abbr: "国人", cat: "社会民生", eg: "迎击世纪疫情期间，全马____众志成城、严守规定。" },
-  { pinyin: "wéi hù zhì ān", orig: "维护社会治安维稳", abbr: "维安", cat: "行政法律", eg: "军警通宵巡逻边境重镇以承担起保家卫国的____重任。" },
-  { pinyin: "wěi pài dài biǎo", orig: "派出人员代表", abbr: "派代", cat: "行政法律", eg: "总会决定____出席于下周召开的各州联席大会。" },
-  { pinyin: "wéi bèi dào dé", orig: "败坏道德悖理", abbr: "悖德", cat: "社会民生", eg: "为了私利背弃年迈双亲，实属大逆不道、令人不齿的____行为。" },
-  { pinyin: "wèi wèn kàn wàng", orig: "慰问伤病抚慰", abbr: "慰问", cat: "社会民生", eg: "慈善团体亲自深入病房对因公负伤的消拯员致以____。" },
-  { pinyin: "wán hǎo wú sǔn", orig: "未受损害无恙", abbr: "完好", cat: "社会民生", eg: "虽经历八级强震，这栋古老木造阁楼依然____。" },
-  { pinyin: "wēi jī sì fú", orig: "凶险危机形势", abbr: "险境", cat: "社会民生", eg: "小舟在狂风巨浪中颠簸摇晃，整船人身陷重重____。" },
-  { pinyin: "wéi lì shì tú", orig: "见利忘义逐利", abbr: "逐利", cat: "经贸商业", eg: "黑心商家一味____，竟然向婴儿贩售假冒配方奶粉。" },
-  { pinyin: "wěi zào zhèng jù", orig: "捏造伪造作伪", abbr: "伪造", cat: "行政法律", eg: "被告为掩盖罪证暗中指使手下____单据，终被识破。" },
-  { pinyin: "wěi qū qiú quán", orig: "勉强迁就隐忍", abbr: "迁就", cat: "动作行为", eg: "为了维护集体表面的虚假和气，她一味委屈____退让。" },
-  { pinyin: "wēn bǎo wèn tí", orig: "解决饥寒温饱", abbr: "温饱", cat: "社会民生", eg: "在偏远落后山区，地方施政当前的第一要务依然是求得____。" },
-  { pinyin: "wěn tuǒ kě kào", orig: "稳重稳当踏实", abbr: "稳妥", cat: "动作行为", eg: "年轻人处事必须脚踏实地，制定切实____的执行方案。" },
-  { pinyin: "wèn juàn diào chá", orig: "民意测验问卷", abbr: "民调", cat: "行政法律", eg: "智库机构就公众对新政的满意度开展了全方位____。" },
-  { pinyin: "wú suǒ zuò wéi", orig: "碌碌无为怠惰", abbr: "虚度", cat: "动作行为", eg: "若在少年黄金时节整天沉沦空谈，无异于在白白____年华。" },
-  { pinyin: "wù jiě qū jiě", orig: "颠倒歪曲事实", abbr: "歪曲", cat: "动作行为", eg: "部分八卦媒体断章取义，刻意____当事人发表的原意。" },
-  { pinyin: "xí guàn hé mín sú", orig: "习惯风俗习俗", abbr: "习俗", cat: "社会民生", eg: "逢年过节登门拜年并赠送红包属于本地华裔优良____。" },
-  { pinyin: "xīn lǐ zhàng ài", orig: "内心心障芥蒂", abbr: "心障", cat: "文教校园", eg: "通过专业心理辅导员循序渐进的开导，他终于跨越了自我____。" },
-  { pinyin: "xīn shēng de yī dài", orig: "年轻新生代青年", abbr: "新生代", cat: "社会民生", eg: "网络科技环境下成长起来的____更加具备敏锐的数字思维。" },
-  { pinyin: "xié shāng tǎo lùn", orig: "商量协商解决", abbr: "协商", cat: "动作行为", eg: "邻国之间因边界水域划分问题坐下来展开多轮和平____。" },
-  { pinyin: "xuān chuán jiào yù", orig: "普及宣扬宣教", abbr: "宣教", cat: "行政法律", eg: "消防部门深入社区全面开展用电防灾的公益____活动。" },
-  { pinyin: "xiāo chú qí jiàn", orig: "冰释前嫌释怨", abbr: "释嫌", cat: "社会民生", eg: "经校长耐心地从中调停，多年好友终于化干戈为玉帛、彻底____。" },
-  { pinyin: "xué xí jiè jiàn", orig: "吸收汲取借鉴", abbr: "借鉴", cat: "文教校园", eg: "做学问既要独立思考，也要广泛____先哲同侪的宝贵心得。" },
-  { pinyin: "xún zhǎo jī huì", orig: "伺机寻觅良机", abbr: "伺机", cat: "动作行为", eg: "猎豹静静潜伏于高草丛深处，等待猎物走近后____扑击。" },
-  { pinyin: "xiāng hù tuī wěi", orig: "互相扯皮推诿", abbr: "推诿", cat: "动作行为", eg: "项目遭遇延期时各个小组成员不该相互猜忌与彼此____。" },
-  { pinyin: "xún xù jiàn jìn", orig: "按部就班循序渐进", abbr: "渐进", cat: "动作行为", eg: "掌握一门外语是一个____的过程，决不能一口吃成胖子。" },
-  { pinyin: "xì wēi guān chá", orig: "明察秋毫细察", abbr: "细察", cat: "文教校园", eg: "侦探凭借对案发现场脚印的____，终于锁定真正的元凶。" },
-  { pinyin: "xié tóng zuò zhàn", orig: "协调配合协作", abbr: "协作", cat: "科技环保", eg: "跨学科团队彼此____攻关，合力攻克了新型储能电池的瓶颈。" },
-  { pinyin: "xiàn zhì quán lì", orig: "权力制衡限权", abbr: "制衡", cat: "行政法律", eg: "现代三权分立政体的初衷在于实现立法、司法与行政相互____。" },
-  { pinyin: "xiān xíng shì yàn", orig: "试点先行试验", abbr: "试点", cat: "科技环保", eg: "新开发的绿色屋顶降温计划正在首府三所中学先行开展____。" },
-  { pinyin: "xiāo yáo fǎ wài", orig: "逃脱法网逍遥", abbr: "逃脱", cat: "行政法律", eg: "天网恢恢疏而不漏，潜逃十数年的通缉重犯终难____制裁。" },
-  { pinyin: "xiāo hào dài jìn", orig: "耗尽竭尽资源", abbr: "耗竭", cat: "科技环保", eg: "若不加节制地肆意抽吸地下水，终会导致水源水库彻底____。" },
-  { pinyin: "xiào jìng fù mǔ", orig: "奉养长辈尽孝", abbr: "尽孝", cat: "社会民生", eg: "羊羔跪乳乌鸦反哺，青年人离家再远也应牢记____双亲。" },
-  { pinyin: "xū xīn jiē shòu", orig: "虚心采纳意见", abbr: "虚心纳言", cat: "动作行为", eg: "领导者唯有乐于倾听逆耳忠言、懂得____，方能行稳致远。" },
-  { pinyin: "xīn zī bào chou", orig: "劳动薪资报酬", abbr: "薪酬", cat: "经贸商业", eg: "企业承诺为具备高阶技能的研发工程师提供丰厚的待遇与____。" },
-  { pinyin: "xuān dú xuān jiǎng", orig: "公开宣读通报", abbr: "通报", cat: "文教校园", eg: "教务主任在全校集会大典上当众____了本届模范生光荣榜。" },
-  { pinyin: "xiàn rù jiāng jú", orig: "僵持互不相让", abbr: "僵持", cat: "社会民生", eg: "谈判两造在土地溢价补偿条文上互不松口，谈判全面陷入____。" },
-  { pinyin: "xiàn kuǎn jiāo yì", orig: "现金交付现结", abbr: "现结", cat: "经贸商业", eg: "早市菜摊大多维持着最原始的传统一手交钱一手交货与____。" },
-  { pinyin: "xǐ xīn yàn jiù", orig: "喜新厌旧薄情", abbr: "厌旧", cat: "社会民生", eg: "为人交友贵在长情信义，最忌得新忘故、朝三暮四的____做派。" },
-  { pinyin: "xiā biān luàn zào", orig: "凭空胡编杜撰", abbr: "杜撰", cat: "文教校园", eg: "写历史调研文章必须言必有据，严禁主观凭空猜测与胡乱____。" },
-  { pinyin: "xīn rán tóng yì", orig: "痛快应承应允", abbr: "应允", cat: "动作行为", eg: "老华侨听闻母校需筹建科学馆，毫不犹豫地当场满口____支持。" },
-  { pinyin: "yà zhōu tài píng yáng", orig: "亚太亚太区域", abbr: "亚太区", cat: "经贸商业", eg: "大马处于连通印度洋与太平洋的咽喉节点，乃____经贸要津。" },
-  { pinyin: "yán gé jìn zhǐ", orig: "严禁坚决禁止", abbr: "严禁", cat: "行政法律", eg: "自然生态森林保护区内____任何未经许可的伐木与狩猎活动。" },
-  { pinyin: "yán gé zūn shǒu", orig: "严格恪守遵守", abbr: "恪守", cat: "文教校园", eg: "参与正规考试者均当以诚信为本、____考场各项纪律要求。" },
-  { pinyin: "yán fáng chéng bàn", orig: "严加惩处严惩", abbr: "严惩", cat: "行政法律", eg: "对跨国贩运危险毒品的亡命之徒，司法机关一律予以最严厉的____。" },
-  { pinyin: "yán lì dǎ jī", orig: "严打整肃取缔", abbr: "严打", cat: "行政法律", eg: "警方在全国范围发起专项除暴行动，向街头非法私会党实施____。" },
-  { pinyin: "yì wù jiào yù", orig: "普及义务教育", abbr: "义教", cat: "文教校园", eg: "保障儿童享有受教育权，现代文明国家多普及九至十一年____。" },
-  { pinyin: "yìng fù kǎo shì", orig: "准备应试备考", abbr: "备考", cat: "文教校园", eg: "学子们放弃假期聚首图书馆潜心做历年真题只为从容____。" },
-  { pinyin: "yǒu jī huà hé wù", orig: "有机化学物", abbr: "有机物", cat: "科技环保", eg: "微生物在腐化过程中将泥土深处的落叶迅速分解为各类____。" },
-  { pinyin: "yǎn gài zhēn xiàng", orig: "掩饰隐瞒真相", abbr: "隐瞒", cat: "行政法律", eg: "涉事部门企图大事化小小事化了，对公众____污染泄漏实情。" },
-  { pinyin: "yuán zhù zāi mín", orig: "救济灾民赈灾", abbr: "赈灾", cat: "社会民生", eg: "军民同心抗灾，各路民间非政府组织积极筹措款物驰援____。" },
-  { pinyin: "yuē shù xíng wéi", orig: "自律规范约束", abbr: "自律", cat: "动作行为", eg: "一个成熟的青年无论身处何处，皆懂得主动依靠内部道德来____。" },
-  { pinyin: "yán wù shí jī", orig: "错失良机贻误", abbr: "贻误", cat: "动作行为", eg: "战机稍纵即逝，统帅若优柔寡断则必定____国家大局乃至惨败。" },
-  { pinyin: "yán xíng bù yī", orig: "表里不一伪善", abbr: "伪善", cat: "社会民生", eg: "满嘴仁义道德背后却敲骨吸髓，这种言行不符的做法实乃极其____。" },
-  { pinyin: "yán jiā fáng fàn", orig: "严加防范严防", abbr: "严防", cat: "科技环保", eg: "化工厂区内到处悬挂警示标志，____一切明火引发火灾爆燃。" },
-  { pinyin: "yǎng zhàng yī kào", orig: "依赖他人仰赖", abbr: "仰赖", cat: "动作行为", eg: "自立自强才能赢得尊重，切莫凡事都一味____父母金钱接济。" },
-  { pinyin: "yǐn yòu shòu piàn", orig: "诱导上当诱骗", abbr: "诱骗", cat: "行政法律", eg: "不法分子用境外高薪作为诱饵，暗中将无知青年____进电诈园区。" },
-  { pinyin: "yǐn shuǐ sī yuán", orig: "感恩报德铭记", abbr: "感恩", cat: "社会民生", eg: "学成报效母校与华社，正体现了南洋华裔子弟____的崇高传统。" },
-  { pinyin: "yǐn mán bìng qíng", orig: "瞒报疫情病情", abbr: "瞒报", cat: "行政法律", eg: "农场主若发现鸡瘟却为了私利刻意向兽医局____，将被追究重刑。" },
-  { pinyin: "yìng yùn ér shēng", orig: "顺应出现创立", abbr: "创立", cat: "经贸商业", eg: "伴随着手机即时通讯的普及，一批新型移动社交应用随之____。" },
-  { pinyin: "yǒng yuè bào míng", orig: "积极踊跃参与", abbr: "踊跃", cat: "文教校园", eg: "全校华语诗歌朗诵大赛的消息一经张贴，同学们纷纷前去____。" },
-  { pinyin: "yǒng yú dān dāng", orig: "担起重任担当", abbr: "担当", cat: "动作行为", eg: "遇事不推卸、敢挑重担并直面困难，体现了一个年轻人的骨气与____。" },
-  { pinyin: "yōu huàn yì shí", orig: "防范未然忧患", abbr: "忧患", cat: "动作行为", eg: "安不忘危，治不忘乱，任何国家在和平繁荣之际皆须怀揣____。" },
-  { pinyin: "yōu shèng liè tài", orig: "择优甄选汰弱", abbr: "甄选", cat: "经贸商业", eg: "自由竞争的市场规律无情运行，必然经历一番残酷的____。" },
-  { pinyin: "yǔ yǐ miǎn chú", orig: "宽免责罚豁免", abbr: "豁免", cat: "行政法律", eg: "鉴于其主动自首并退还所有脏款，法官依法对其惩罚作出了从轻____。" },
-  { pinyin: "yú mù hùn zhū", orig: "假冒伪劣混充", abbr: "混充", cat: "经贸商业", eg: "名表市场上充斥着高仿山寨品，不良摊贩妄图以假乱真、拿劣品____。" },
-  { pinyin: "yuán wén yǐn yòng", orig: "照抄引用原文", abbr: "引用", cat: "文教校园", eg: "写论文若直接搬用前人研究成果，必须严格注明文献来源并合规____。" },
-  { pinyin: "yuàn shēng zài dào", orig: "激起民怨怨恨", abbr: "激怨", cat: "社会民生", eg: "政策朝令夕改且未经充分咨询民间，一时之间朝野民间一片____。" },
-  { pinyin: "yuē tán tán huà", orig: "严肃告诫约谈", abbr: "约谈", cat: "行政法律", eg: "反垄断监督委员会就操纵肉鸡物价嫌疑对六大禽业批发巨头进行____。" },
-  { pinyin: "yùn chóu wéi wò", orig: "筹谋策划全局", abbr: "筹谋", cat: "动作行为", eg: "老军师坐镇军帐中从容指挥、细致____，方得千里之外的战役全胜。" },
-  { pinyin: "yú qī bù jiāo", orig: "拖欠延迟交纳", abbr: "逾期", cat: "经贸商业", eg: "图书借阅到期必须如期归还，若有____不还者将按天折算扣罚借阅权。" },
-  { pinyin: "zhǎn chū bìng xiāo shòu", orig: "展出销售展销", abbr: "展销", cat: "经贸商业", eg: "大型手工艺品博览会在会展中心盛大举行，吸引大批外商前往____。" },
-  { pinyin: "zhàn yòng tǔ dì", orig: "非法占用土地", abbr: "占地", cat: "行政法律", eg: "违建木屋区因私自侵占水利保留地被市政局勒令限期自拆以清理____。" },
-  { pinyin: "zé rèn biān jí", orig: "报刊责任编辑", abbr: "责编", cat: "文教校园", eg: "文章见报前必须经由____反复校对字词与版面以杜绝任何硬伤。" },
-  { pinyin: "zhēn xī shí jiān", orig: "珍惜光阴惜时", abbr: "惜时", cat: "文教校园", eg: "一寸光阴一寸金，备战中考统考阶段唯有学会善于____者才能脱颖而出。" },
-  { pinyin: "zhěng dùn zuò fēng", orig: "整风纠正风气", abbr: "整风", cat: "行政法律", eg: "机关推行廉洁自律运动，全面开展自查自纠并狠抓严肃的作风____。" },
-  { pinyin: "zhèng jīng wén jiào", orig: "政治经济文教", abbr: "政经文教", cat: "社会民生", eg: "华社先辈南渡以来，全面参与了建国时期横跨____各项大业。" },
-  { pinyin: "zhèng zhì yǔ jīng jì", orig: "政治与宏观经济", abbr: "政经", cat: "经贸商业", eg: "报章的重点社论专版常深刻剖析当前国内乃至国际重大的____动向。" },
-  { pinyin: "zhǐ zé hé kòng gào", orig: "提出指控控告", abbr: "指控", cat: "行政法律", eg: "公诉人在庭审中出具详实银行账目，当庭宣读针对被告贪污的数项____。" },
-  { pinyin: "zhī shi qīng nián", orig: "知识分子青年", abbr: "知青", cat: "文教校园", eg: "受过现代中等以上教育的____应当深入民间基层、服务大众乡土。" },
-  { pinyin: "zhì lì shāng shù", orig: "智力发展商数", abbr: "智商", cat: "文教校园", eg: "决定一个人长远事业高度的往往不仅在于先天的____，更在于情商韧性。" },
-  { pinyin: "qíng xù shāng shù", orig: "情绪管理商数", abbr: "情商", cat: "文教校园", eg: "面对复杂人际关系与考场压力时，稳定的心理调适与较高____格外重要。" },
-  { pinyin: "zhì zào shēng shì", orig: "扩大声浪造势", abbr: "造势", cat: "经贸商业", eg: "新产品发布会邀请了百位知名网络达人齐聚站台以此高调____。" },
-  { pinyin: "zhōu dào ér xì mì", orig: "周密周全严谨", abbr: "周密", cat: "动作行为", eg: "做重大决策与部署行动之前，必须制定周详而又万无一失的____计划。" },
-  { pinyin: "zhǔ yào yuán yīn", orig: "核心诱因主因", abbr: "主因", cat: "动作行为", eg: "缺乏有效的复习规划与临阵慌乱是导致多位考生本次应考失利的____。" },
-  { pinyin: "zhǔ yào cì yào", orig: "主次分明缓急", abbr: "主次", cat: "动作行为", eg: "概述作答时要学会去粗取精，分清事件脉络与论据轻重的关键____。" },
-  { pinyin: "zhuān mén rén cái", orig: "专业特长专才", abbr: "专才", cat: "文教校园", eg: "高科技芯片制造产业链亟需大批具备扎实数理与微电子功底的顶尖____。" },
-  { pinyin: "zhuān mén wěi yuán huì", orig: "专门工作委员会", abbr: "专委", cat: "行政法律", eg: "国会下议院针对跨国跨境电信诈骗特别成立了专项审查的跨党派____。" },
-  { pinyin: "zì dòng kòng zhì", orig: "自动化智能控制", abbr: "自控", cat: "科技环保", eg: "汽车组装流水线已全面改由机械臂与全电脑网络____系统接管。" },
-  { pinyin: "zì wǒ jì lǜ", orig: "自觉约束自律", abbr: "自律", cat: "动作行为", eg: "自学网课时代，拉开同龄人间成绩差距的最大分水岭往往在于个人____。" },
-  { pinyin: "zì jué zūn shǒu", orig: "自动遵守恪守", abbr: "恪守", cat: "行政法律", eg: "优良校风的建立离不开全体中学生从我做起、____各项公共秩序。" },
-  { pinyin: "zǒng jié jīng yàn", orig: "评估总结成果", abbr: "总结", cat: "动作行为", eg: "每场测验考完之后皆当仔细翻看错题笔记，及时反思并做好阶段性____。" },
-  { pinyin: "zhān qián gù hòu", orig: "犹疑不决迟疑", abbr: "迟疑", cat: "动作行为", eg: "机遇稍纵即逝，在重大选择关头切莫患得患失、畏首畏尾地过度____。" },
-  { pinyin: "zhǎn cǎo chú gēn", orig: "根治彻底铲除", abbr: "根治", cat: "行政法律", eg: "对待横行校园的私会党暴力霸凌行为必须严惩不贷、坚决做到____。" },
-  { pinyin: "zàn zhù zī jīn", orig: "资金捐助报效", abbr: "报效", cat: "经贸商业", eg: "热心商家慷慨解囊，为本届运动会免费____矿泉水与帐篷物资。" },
-  { pinyin: "zhǎng wò jì néng", orig: "熟练掌握通晓", abbr: "熟稔", cat: "动作行为", eg: "经过为期三个月的密集演练，学徒对于各项精密车床操作已极度____。" },
-  { pinyin: "zhāo gào tiān xià", orig: "公开宣布宣告", abbr: "宣告", cat: "行政法律", eg: "仲裁法庭出具最终调查裁决书，正式向社会公众____案件审理终结。" },
-  { pinyin: "zhé zhōng fāng àn", orig: "兼顾两造折衷", abbr: "折衷", cat: "动作行为", eg: "在双方寸步不让的僵持局面下，调停人提出了一份彼此皆可接受的____方案。" },
-  { pinyin: "zhēn cáng bǎo hù", orig: "妥善珍藏保管", abbr: "珍藏", cat: "文教校园", eg: "这批记录了早期华侨先辈南来拓荒开拓史的泛黄契约被图书馆悉心____。" },
-  { pinyin: "zhēn xiàng dà bái", orig: "水落石出明朗", abbr: "释明", cat: "行政法律", eg: "随着关键证人的挺身而出，这桩尘封十数载的冤案谜团终于彻底____。" },
-  { pinyin: "zhēng qǔ lì yì", orig: "抢夺争夺利益", abbr: "争利", cat: "经贸商业", eg: "垄断集团不顾公众生活疾苦，与民____的贪婪做法受到舆论一致挞伐。" },
-  { pinyin: "zhēng qiú yì jiàn", orig: "征询听取意见", abbr: "征询", cat: "行政法律", eg: "市政局在调整公共泊车位收费机制之前，主动派员向市民召开公听会____。" },
-  { pinyin: "zhēng zhēng rì shàng", orig: "繁盛蓬勃发展", abbr: "繁盛", cat: "经贸商业", eg: "得益于政局稳健与利好政策，本地数字高新产业整体呈现一派____景象。" },
-  { pinyin: "zhí mí bù wù", orig: "冥顽顽固不化", abbr: "顽固", cat: "动作行为", eg: "哪怕面对铁证如山，肇事者依然死不悔改、____地强词狡辩到底。" },
-  { pinyin: "zhǐ huī ruò dìng", orig: "临场从容调度", abbr: "调度", cat: "行政法律", eg: "消防总指挥在浓烟火海前毫无慌乱之色，从容调动多方水车完成有序____。" },
-  { pinyin: "zhōng zhēn bù èr", orig: "效忠坚贞恪尽", abbr: "效忠", cat: "行政法律", eg: "无论身处和平岁月亦或风雨飘摇之际，爱国将士终身矢志不渝地____祖国。" },
-  { pinyin: "zhōng shēng shòu yì", orig: "受用不尽终身获益", abbr: "终生受用", cat: "文教校园", eg: "在中学阶段培养起扎实深度的自律与独立思考习惯，必将使你____。" },
-  { pinyin: "zhòng suǒ zhōu zhī", orig: "人人皆知熟知", abbr: "熟知", cat: "文教校园", eg: "中华文化历史源远流长且兼收并蓄，此乃海内外世人尽皆共晓、____的事实。" },
-  { pinyin: "zhòng xīn bù shǔ", orig: "再次调整重构", abbr: "调整", cat: "行政法律", eg: "面对复杂多变的海外市场动向，董事会决议对本年度营销战略全面展开____。" },
-  { pinyin: "zhuī chá dào dǐ", orig: "深入调查彻查", abbr: "彻查", cat: "行政法律", eg: "针对严重危及校园公共饮用水安全的源头，警方与卫生局发誓务必予以____。" },
-  { pinyin: "zhuō jīn jiàn zhǒu", orig: "资金匮乏拮据", abbr: "拮据", cat: "社会民生", eg: "失业数月使得原本就不充裕的家庭储蓄彻底告罄，日常生活顿时陷入____。" },
-  { pinyin: "zì shí qí lì", orig: "自立独立谋生", abbr: "自立", cat: "社会民生", eg: "尽管天生带有轻度身体残疾，他依然依靠一双勤劳双手钻研修鞋、誓图____。" },
-  { pinyin: "zì xiāng máo dùn", orig: "抵触自相抵触", abbr: "抵触", cat: "文教校园", eg: "做陈述答辩时论据与前提条件若脱节颠倒，必然会在逻辑上形成严重的自我____。" },
-  { pinyin: "zǒu tóu wú lù", orig: "穷途陷入绝境", abbr: "穷途", cat: "社会民生", eg: "在被高利贷集团追逼与生意破产的双重夹击下，他几乎彻底陷于____。" },
-  { pinyin: "zǔ ài fā zhǎn", orig: "遏制阻滞发展", abbr: "阻滞", cat: "动作行为", eg: "陈旧僵化的办事流程与官僚主义严重____了外来资本在本地投资落户的速度。" },
-  { pinyin: "zuò wēi zuò fú", orig: "仗势欺人欺压", abbr: "欺压", cat: "社会民生", eg: "社区流氓倚仗权贵撑腰横行乡里，动辄向弱小摊贩____，令人痛恨至极。" }
-];
-
-// 状态管理
-let currentList = [...rawData];
-let currentIndex = 0;
-let isFlipped = false;
-let masteredSet = new Set(JSON.parse(localStorage.getItem('my_mastered_words') || '[]'));
-let weakSet = new Set(JSON.parse(localStorage.getItem('my_weak_words') || '[]'));
-let currentFilter = 'all';
-let isMistakeMode = false;
-
-// DOM 元素引用
-const cardWrapper = document.getElementById('cardWrapper');
-const cardInner = document.getElementById('cardInner');
-const cardPinyin = document.getElementById('cardPinyin');
-const cardOriginal = document.getElementById('cardOriginal');
-const cardAbbr = document.getElementById('cardAbbr');
-const cardCategory = document.getElementById('cardCategory');
-const cardSaving = document.getElementById('cardSaving');
-const cardExample = document.getElementById('cardExample');
-const cardIndexTag = document.getElementById('cardIndexTag');
-const progressBar = document.getElementById('progressBar');
-const statsText = document.getElementById('statsText');
-const cardCounter = document.getElementById('cardCounter');
-const mistakeCountSpan = document.getElementById('mistakeCount');
-const btnWeak = document.getElementById('btnWeak');
-const btnMaster = document.getElementById('btnMaster');
-const mistakeModeBtn = document.getElementById('mistakeModeBtn');
-const randomQuizBtn = document.getElementById('randomQuizBtn');
-const filterContainer = document.getElementById('filterContainer');
-
-// 更新统计数据与进度条
-function updateStats() {
-  const total = rawData.length;
-  const masteredCount = masteredSet.size;
-  const percent = Math.round((masteredCount / total) * 100);
-  
-  progressBar.style.width = percent + '%';
-  statsText.textContent = `已掌握 ${masteredCount} / ${total} 词 (${percent}%)`;
-  mistakeCountSpan.textContent = weakSet.size;
-
-  localStorage.setItem('my_mastered_words', JSON.stringify([...masteredSet]));
-  localStorage.setItem('my_weak_words', JSON.stringify([...weakSet]));
-}
-
-// 渲染当前卡片
-function renderCard() {
-  if (currentList.length === 0) {
-    cardInner.classList.remove('flipped');
-    isFlipped = false;
-    cardPinyin.textContent = "";
-    cardOriginal.textContent = isMistakeMode ? "太棒了！错题库已清空" : "无匹配词汇";
-    cardIndexTag.textContent = "#0";
-    cardCounter.textContent = `进度：0 / 0`;
-    return;
-  }
-
-  if (currentIndex >= currentList.length) {
-    currentIndex = 0;
-  }
-
-  const item = currentList[currentIndex];
-
-  // 还原为正面
-  cardInner.classList.remove('flipped');
-  isFlipped = false;
-
-  setTimeout(() => {
-    cardIndexTag.textContent = `#${currentIndex + 1}`;
-    cardPinyin.textContent = item.pinyin;
-    cardOriginal.textContent = item.orig;
-    cardAbbr.textContent = item.abbr;
-    cardCategory.textContent = item.cat;
-
-    const savedCount = item.orig.length - item.abbr.length;
-    cardSaving.textContent = `${item.orig.length} 字 → ${item.abbr.length} 字 (省${Math.round(savedCount/item.orig.length * 100)}%)`;
-    cardExample.innerHTML = item.eg.replace("____", `<b style="color:var(--primary-teal); border-bottom: 2px solid var(--primary-teal);">${item.abbr}</b>`);
-
-    cardCounter.textContent = `进度：${currentIndex + 1} / ${currentList.length}`;
-  }, 120);
-
-  updateStats();
-}
-
-// 翻转卡片
-cardWrapper.addEventListener('click', () => {
-  if (currentList.length === 0) return;
-  isFlipped = !isFlipped;
-  cardInner.classList.toggle('flipped', isFlipped);
-});
-
-// “待加强” 按钮点击
-btnWeak.addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (currentList.length === 0) return;
-  const item = currentList[currentIndex];
-  weakSet.add(item.orig);
-  masteredSet.delete(item.orig);
-  
-  nextCard();
-});
-
-// “已掌握” 按钮点击
-btnMaster.addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (currentList.length === 0) return;
-  const item = currentList[currentIndex];
-  masteredSet.add(item.orig);
-  weakSet.delete(item.orig);
-
-  if (isMistakeMode) {
-    currentList.splice(currentIndex, 1);
-    if (currentIndex >= currentList.length) currentIndex = 0;
-    renderCard();
-  } else {
-    nextCard();
-  }
-});
-
-function nextCard() {
-  if (currentList.length === 0) return;
-  currentIndex = (currentIndex + 1) % currentList.length;
-  renderCard();
-}
-
-// 分类筛选
-filterContainer.addEventListener('click', (e) => {
-  const btn = e.target.closest('.tag-btn');
-  if (!btn) return;
-
-  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-
-  currentFilter = btn.dataset.cat;
-  isMistakeMode = false;
-  mistakeModeBtn.classList.remove('active');
-
-  if (currentFilter === 'all') {
-    currentList = [...rawData];
-  } else {
-    currentList = rawData.filter(item => item.cat === currentFilter);
-  }
-  currentIndex = 0;
-  renderCard();
-});
-
-// 错题训练模式
-mistakeModeBtn.addEventListener('click', () => {
-  if (weakSet.size === 0) {
-    alert("目前错题本为空！在学习中点击【❌ 待加强】可收录弱项词。");
-    return;
-  }
-  isMistakeMode = !isMistakeMode;
-  mistakeModeBtn.classList.toggle('active', isMistakeMode);
-
-  if (isMistakeMode) {
-    currentList = rawData.filter(item => weakSet.has(item.orig));
-  } else {
-    currentList = currentFilter === 'all' ? [...rawData] : rawData.filter(item => item.cat === currentFilter);
-  }
-  currentIndex = 0;
-  renderCard();
-});
-
-// 随机测验（洗牌）
-randomQuizBtn.addEventListener('click', () => {
-  if (currentList.length <= 1) return;
-  // Fisher-Yates 随机打乱
-  for (let i = currentList.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [currentList[i], currentList[j]] = [currentList[j], currentList[i]];
-  }
-  currentIndex = 0;
-  renderCard();
-});
-
-// 键盘快捷键支持 (Space翻转, ←待加强, →已掌握)
-document.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') {
-    e.preventDefault();
-    cardWrapper.click();
-  } else if (e.code === 'ArrowLeft') {
-    btnWeak.click();
-  } else if (e.code === 'ArrowRight') {
-    btnMaster.click();
-  }
-});
-
-// 初始化
-updateStats();
-renderCard();
-</script>
+    <!-- ==========================================
+         脚本加载（顺序很重要！）
+         ========================================== -->
+    <!-- 1. 先加载数据 -->
+    <script src="data.js"></script>
+    
+    <!-- 2. 再加载逻辑 -->
+    <script src="script.js"></script>
 
 </body>
 </html>
